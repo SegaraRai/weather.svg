@@ -93,7 +93,7 @@ app.get(
 
     const weatherData = (await weatherRes.json()) as Weather;
     return c.text(
-      renderWeatherWidget(weatherData, query, "Somewhere", "en-US"),
+      renderWeatherWidget(weatherData, query, "Somewhere", "en-US") + "\n",
       200,
       {
         "Cache-Control": "no-cache, no-store, must-revalidate",

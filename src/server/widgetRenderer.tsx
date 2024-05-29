@@ -1,4 +1,4 @@
-import { render } from "./jsx/preactCompat";
+import { pRender } from "./jsx";
 import { WeatherWidget } from "../widget";
 import type { Weather } from "../types/weather";
 import type { PreferencesSchema } from "../widget/schemas";
@@ -10,16 +10,14 @@ export function renderWeatherWidget(
   locationLabel: string,
   locationLanguage: string
 ): string {
-  return (
-    injectIconSymbols(
-      render(
-        <WeatherWidget
-          weather={weather}
-          preferences={preferences}
-          locationLabel={locationLabel}
-          locationLanguage={locationLanguage}
-        />
-      )
-    ) + "\n"
+  return injectIconSymbols(
+    pRender(
+      <WeatherWidget
+        weather={weather}
+        preferences={preferences}
+        locationLabel={locationLabel}
+        locationLanguage={locationLanguage}
+      />
+    )
   );
 }
