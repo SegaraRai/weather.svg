@@ -1,0 +1,57 @@
+name: 日本語
+name_english: Japanese
+code: ja-JP
+
+# WMO Weather Interpretation Codes (WW)
+
+wmo_0: 快晴
+wmo_1: 晴れ
+wmo_2: 曇り
+wmo_3: 曇り
+wmo_45: 霧
+wmo_48: 着氷性の霧
+wmo_51: 弱い小雨
+wmo_53: 小雨
+wmo_55: 強い小雨
+wmo_56: 弱い着氷性の小雨
+wmo_57: 強い着氷性の小雨
+wmo_61: 弱い雨
+wmo_63: 雨
+wmo_65: 強い雨
+wmo_66: 弱い着氷性の雨
+wmo_67: 強い着氷性の雨
+wmo_71: 弱い雪
+wmo_73: 雪
+wmo_75: 強い雪
+wmo_77: 細かい雪
+wmo_80: 弱いにわか雨
+wmo_81: にわか雨
+wmo_82: 強いにわか雨
+wmo_85: 弱いにわか雪
+wmo_86: 強いにわか雪
+wmo_95: 雷雨
+wmo_96: 弱いひょうを伴う雷雨
+wmo_99: 強いひょうを伴う雷雨
+wmo_unknown: 不明
+
+# Labels
+
+label_humidity: 湿度
+label_precipitation_probability: 降水確率
+label_precipitation: 降水量
+label_wind_speed: 風速
+label_sea_level_pressure: 海面気圧
+
+# Units
+
+unit_celsius: °C
+unit_fahrenheit: °F
+unit_percent: "%"
+unit_mps: m/s
+unit_kmph: km/h
+unit_mph: mph
+unit_knot: kt
+unit_mm: mm
+unit_inch: in
+unit_hpa: hPa
+unit_inhg: inHg

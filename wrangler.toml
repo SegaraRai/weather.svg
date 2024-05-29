@@ -1,0 +1,13 @@
+name = "weather-svg"
+account_id = "1a5d304db1c315f0731d67e097a1ee6c"
+workers_dev = true
+compatibility_date = "2024-05-01"
+
+main = "dist/server.js"
+
+[build]
+command = "pnpm dev-build"
+watch_dir = "src"
+
+[dev]
+port = 5177

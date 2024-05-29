@@ -1,0 +1,57 @@
+name: English
+name_english: English
+code: en-US
+
+# WMO Weather Interpretation Codes (WW)
+
+wmo_0: Clear
+wmo_1: Partly Cloudy
+wmo_2: Mostly Cloudy
+wmo_3: Overcast
+wmo_45: Foggy
+wmo_48: Frosty Fog
+wmo_51: Light Drizzle
+wmo_53: Moderate Drizzle
+wmo_55: Heavy Drizzle
+wmo_56: Light Freezing Drizzle
+wmo_57: Heavy Freezing Drizzle
+wmo_61: Light Rain
+wmo_63: Moderate Rain
+wmo_65: Heavy Rain
+wmo_66: Light Freezing Rain
+wmo_67: Heavy Freezing Rain
+wmo_71: Light Snow
+wmo_73: Moderate Snow
+wmo_75: Heavy Snow
+wmo_77: Snow Grains
+wmo_80: Light Rain Showers
+wmo_81: Moderate Rain Showers
+wmo_82: Heavy Rain Showers
+wmo_85: Light Snow Showers
+wmo_86: Heavy Snow Showers
+wmo_95: Thunderstorm
+wmo_96: Thunderstorm with Light Hail
+wmo_99: Thunderstorm with Heavy Hail
+wmo_unknown: Unknown
+
+# Labels (incl. a11y)
+
+label_humidity: Humidity
+label_precipitation_probability: Chance of Rain
+label_precipitation: Precipitation
+label_wind_speed: Wind Speed
+label_sea_level_pressure: Sea Level Pressure
+
+# Units
+
+unit_celsius: °C
+unit_fahrenheit: °F
+unit_percent: "%"
+unit_mps: m/s
+unit_kmph: km/h
+unit_mph: mph
+unit_knot: kt
+unit_mm: mm
+unit_inch: in
+unit_hpa: hPa
+unit_inhg: inHg

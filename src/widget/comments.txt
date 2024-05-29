@@ -1,0 +1,17 @@
+
+ _       __           __  __
+| |     / /__  ____ _/ /_/ /_  ___  ___________   ______ _
+| | /| / / _ \/ __ `/ __/ __ \/ _ \/ ___/ ___/ | / / __ `/
+| |/ |/ /  __/ /_/ / /_/ / / /  __/ /  (__  )| |/ / /_/ /
+|__/|__/\___/\__,_/\__/_/ /_/\___/_(_)/____/ |___/\__, /
+                                                 /____/
+Weather.svg by SegaraRai.
+https://github.com/SegaraRai/weather.svg
+
+________________________________________________________________
+
+Weather data by Open-Meteo [CC BY 4.0].
+https://open-meteo.com/
+
+Meteocons by Bas Milius [MIT License].
+https://bas.dev/work/meteocons

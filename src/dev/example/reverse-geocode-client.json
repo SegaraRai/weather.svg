@@ -1,0 +1,100 @@
+{
+  "latitude": 35.698683,
+  "lookupSource": "coordinates",
+  "longitude": 139.774219,
+  "localityLanguageRequested": "en",
+  "continent": "Asia",
+  "continentCode": "AS",
+  "countryName": "Japan",
+  "countryCode": "JP",
+  "principalSubdivision": "Tokyo",
+  "principalSubdivisionCode": "JP-13",
+  "city": "Tokyo",
+  "locality": "Chiyoda",
+  "postcode": "",
+  "plusCode": "8Q7XMQXF+FM",
+  "localityInfo": {
+    "administrative": [
+      {
+        "name": "Japan",
+        "description": "island country in East Asia",
+        "isoName": "Japan",
+        "order": 3,
+        "adminLevel": 2,
+        "isoCode": "JP",
+        "wikidataId": "Q17",
+        "geonameId": 1861060
+      },
+      {
+        "name": "Kanto region",
+        "description": "one of 8 regions in Japan encompassing 7 prefectures",
+        "order": 5,
+        "adminLevel": 3,
+        "wikidataId": "Q132480"
+      },
+      {
+        "name": "Tokaido",
+        "description": "Japanese geographical term",
+        "order": 6,
+        "adminLevel": 3,
+        "wikidataId": "Q1196306"
+      },
+      {
+        "name": "Tokyo",
+        "description": "capital and largest city of Japan",
+        "isoName": "Tokyo",
+        "order": 7,
+        "adminLevel": 4,
+        "isoCode": "JP-13",
+        "wikidataId": "Q1490",
+        "geonameId": 1850144
+      },
+      {
+        "name": "Tokyo",
+        "description": "capital and largest city of Japan",
+        "order": 8,
+        "adminLevel": 4,
+        "wikidataId": "Q1490",
+        "geonameId": 1850147
+      },
+      {
+        "name": "Musashi Province",
+        "description": "former province of Japan",
+        "order": 9,
+        "adminLevel": 4,
+        "wikidataId": "Q907398"
+      },
+      {
+        "name": "Chiyoda",
+        "description": "special ward in the Tokyo Metropolis in Japan",
+        "order": 10,
+        "adminLevel": 7,
+        "wikidataId": "Q214051",
+        "geonameId": 11749713
+      }
+    ],
+    "informative": [
+      {
+        "name": "Asia",
+        "description": "continent",
+        "isoName": "Asia",
+        "order": 1,
+        "isoCode": "AS",
+        "wikidataId": "Q48",
+        "geonameId": 6255147
+      },
+      {
+        "name": "Asia/Tokyo",
+        "description": "time zone",
+        "order": 2
+      },
+      {
+        "name": "Honshu",
+        "description": "largest island of Japan",
+        "order": 4,
+        "wikidataId": "Q13989",
+        "geonameId": 1862185
+      }
+    ]
+  }
+}
