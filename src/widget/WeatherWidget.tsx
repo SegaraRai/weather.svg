@@ -71,58 +71,19 @@ function OpacityAnimation({
   );
 }
 
-function createDateWithTimezone(datetime: string, timezone: string): Date {
-  const asUTCDate = new Date(datetime + "Z");
-  const roughOffset =
-    asUTCDate
-      .toLocaleString("en-US", {
-        timeZone: timezone,
-        timeZoneName: "longOffset",
-      })
-      .split("GMT")[1] || "+00:00";
-
-  const dateWithRoughOffset = new Date(
-    asUTCDate.toISOString().replace("Z", roughOffset)
-  );
-  const roDateFormatted = dateWithRoughOffset
-    .toLocaleString("sv-SE", {
-      timeZone: timezone,
-    })
-    .replace(" ", "T");
-  if (roDateFormatted.slice(0, datetime.length) === datetime) {
-    return dateWithRoughOffset;
-  }
-
-  const parseHM = (time: string) => {
-    const [hour, minute] = time.split(":").map(Number);
-    return hour * 60 + minute;
-  };
-  const sourceTime = parseHM(datetime.split("T")[1]);
-  const roDateTime = parseHM(roDateFormatted.split("T")[1]);
-  if (sourceTime === roDateTime) {
-    return dateWithRoughOffset;
-  }
-
-  dateWithRoughOffset.setUTCMinutes(
-    dateWithRoughOffset.getUTCMinutes() + (sourceTime - roDateTime)
-  );
-  return dateWithRoughOffset;
-}
-
 function formatDateTime(
   datetime: string,
-  timezone: string,
   language: string,
   prefTimeFormat: PreferencesSchema["time_format"]
 ): [weekday: string, dateTime: string] {
-  const date = createDateWithTimezone(datetime, timezone);
+  const date = new Date(datetime + "Z");
   return [
     date.toLocaleString(language, {
-      timeZone: timezone,
+      timeZone: "UTC",
       weekday: "long",
     }),
     date.toLocaleString(language, {
-      timeZone: timezone,
+      timeZone: "UTC",
       ...(prefTimeFormat === "auto"
         ? { dateStyle: "medium", timeStyle: "short" }
         : {
@@ -172,7 +133,6 @@ export function WeatherWidget({
 
   const [formattedWeekday, formattedDateTime] = formatDateTime(
     datetime,
-    timezone,
     language,
     prefTimeFormat
   );
