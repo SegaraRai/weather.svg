@@ -137,8 +137,8 @@ export function WeatherWidget({
     prefTimeFormat
   );
 
-  // prevent showing 0 mm or 0 inch precipitation
-  const showPrecipitation = weather.current.precipitation >= 30;
+  // prevent showing 0 mm or 0.0 inch precipitation
+  const showPrecipitation = weather.current.precipitation >= 5;
 
   const temperature = TEMPERATURE_CONVERSION_MAP[prefTemperature](
     weather.current.temperature_2m
