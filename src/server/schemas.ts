@@ -9,28 +9,27 @@ import {
 } from "valibot";
 import { isValidLanguageTag } from "../widget/schemas";
 
-function isValidDecimal(decimal: unknown): decimal is string {
-  return (
-    typeof decimal === "string" &&
-    /^[+-]?\d+(?:\.\d*)?/.test(decimal) &&
-    isFinite(parseFloat(decimal))
-  );
+function parseDecimal(decimal: unknown): number | null {
+  if (typeof decimal !== "string" || !/^[+-]?\d+(?:\.\d*)?$/.test(decimal)) {
+    return null;
+  }
+
+  const value = parseFloat(decimal);
+  if (!isFinite(value)) {
+    return null;
+  }
+
+  return value;
 }
 
 function isValidLatitude(latitude: unknown): latitude is string {
-  return (
-    isValidDecimal(latitude) &&
-    parseFloat(latitude) >= -90 &&
-    parseFloat(latitude) <= 90
-  );
+  const value = parseDecimal(latitude);
+  return value != null && value >= -90 && value <= 90;
 }
 
 function isValidLongitude(longitude: unknown): longitude is string {
-  return (
-    isValidDecimal(longitude) &&
-    parseFloat(longitude) >= -180 &&
-    parseFloat(longitude) <= 180
-  );
+  const value = parseDecimal(longitude);
+  return value != null && value >= -180 && value <= 180;
 }
 
 export const plainLocationSchema = pipe(
