@@ -43,6 +43,20 @@ function escapeHTML(value: string): string {
   );
 }
 
+function escapeHTMLContent(value: string): string {
+  return normalizeNewlines(value).replace(
+    /[&<>"']/g,
+    (match) =>
+      ({
+        "&": "&#38;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&#34;",
+        "'": "&#39;",
+      })[match]!
+  );
+}
+
 function escapeHTMLComment(value: string): string {
   // https://html.spec.whatwg.org/#comments
   return normalizeNewlines(value)
@@ -64,17 +78,19 @@ function renderProps(props: Readonly<Record<string, PropValue>>): string {
     .join("");
 }
 
-function renderChild(children: Children): string {
+function renderChild(children: Children, noNewlines: boolean): string {
   if (children == null || children === false) {
     return "";
   }
 
   if (isPrintablePrimitive(children)) {
-    return escapeHTML(String(children));
+    return noNewlines
+      ? escapeHTML(String(children))
+      : escapeHTMLContent(String(children));
   }
 
   if (children[SYMBOL_NODE_TYPE]) {
-    return render(children);
+    return render(children, noNewlines);
   }
 
   if (import.meta.env.DEV) {
@@ -84,27 +100,45 @@ function renderChild(children: Children): string {
   return "";
 }
 
-function renderChildren(children: readonly Children[]): string {
+function renderChildren(
+  children: readonly Children[],
+  noNewlines: boolean
+): string {
   const result = children
     .map((v) => {
-      const part = renderChild(v);
-      return part.endsWith(">") ? `${part}\n` : part;
+      const part = renderChild(v, noNewlines);
+      return !noNewlines && part.endsWith(">") ? `${part}\n` : part;
     })
     .join("");
-  return result.includes("\n") ? `\n${result.trimEnd()}\n` : result;
+  return !noNewlines && result.includes("\n")
+    ? `\n${result.trimEnd()}\n`
+    : result;
 }
 
 function extractChildren(
   children: readonly Children[]
 ): Children | readonly Children[] {
-  return children.length === 0
-    ? undefined
-    : children.length === 1
-      ? children[0]
-      : children;
+  switch (children.length) {
+    case 0:
+      return;
+
+    case 1:
+      return children[0];
+
+    default:
+      return children;
+  }
 }
 
-export function render(node: Node): string {
+/**
+ * returns true if the tag should not have newlines in its content
+ */
+function isNoNewlineTag(tag: string): boolean {
+  // newlines can affect text rendering in SVG
+  return tag === "text" || tag === "tspan";
+}
+
+export function render(node: Node, noNewlines = false): string {
   switch (node[SYMBOL_NODE_TYPE]) {
     case NODE_TYPE_SUBSTANTIAL: {
       const { t: tag, p: props, c: children } = node;
@@ -116,6 +150,7 @@ export function render(node: Node): string {
           return "";
         }
 
+        // special case for comments
         if (tag === "htmlComment") {
           return `<!--${escapeHTMLComment(String(props.content))}-->`;
         }
@@ -123,7 +158,7 @@ export function render(node: Node): string {
         const preamble = `<${tag}${renderProps(props)}`;
 
         return children.some((child) => child != null && child !== "")
-          ? `${preamble}>${renderChildren(children)}</${tag}>`
+          ? `${preamble}>${renderChildren(children, noNewlines || isNoNewlineTag(tag))}</${tag}>`
           : `${preamble} />`;
       }
 
@@ -139,7 +174,7 @@ export function render(node: Node): string {
 
     case NODE_TYPE_FRAGMENT: {
       const { c: children } = node;
-      return renderChildren(children).trim();
+      return renderChildren(children, noNewlines).trim();
     }
 
     default:
