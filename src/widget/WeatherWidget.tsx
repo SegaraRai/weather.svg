@@ -1,10 +1,10 @@
 import { IconSymbolsDefs } from "iconSymbols.tsx";
+import inlineUnoCSS from "inline.uno.css?inline";
 import type { Weather } from "../types/weather";
-import { getTheme } from "./theme";
-import { getWeatherIcon } from "./icons";
-import { getTranslation, getTranslationLanguage } from "./translations";
 import { WidgetBackground } from "./Background";
-import type { PreferencesSchema } from "./schemas";
+import { HTMLComment } from "./HTMLComment";
+import animationsCSS from "./animations.css?inline";
+import comments from "./comments.txt?raw";
 import {
   LENGTH_CONVERSION_MAP,
   LENGTH_FRACTION_DIGITS_MAP,
@@ -16,9 +16,10 @@ import {
   TEMPERATURE_CONVERSION_MAP,
   TEMPERATURE_FRACTION_DIGITS_MAP,
 } from "./conversion";
-import { HTMLComment } from "./HTMLComment";
-import css from "./widget.css?inline";
-import comments from "./comments.txt?raw";
+import { getWeatherIcon } from "./icons";
+import type { PreferencesSchema } from "./schemas";
+import { getTheme } from "./theme";
+import { getTranslation, getTranslationLanguage } from "./translations";
 
 const ANIMATION_PART_DURATION = 8;
 const ANIMATION_SWITCH_DURATION = 0.4;
@@ -178,7 +179,8 @@ export function WeatherWidget({
         <clipPath id="widget-clip">
           <rect width="400" height="120" />
         </clipPath>
-        <style>{css}</style>
+        <style>{animationsCSS}</style>
+        {!import.meta.env.DEV && <style>{inlineUnoCSS}</style>}
       </defs>
       <g
         clip-path="url(#widget-clip)"
@@ -186,13 +188,8 @@ export function WeatherWidget({
         font-family="system-ui, sans-serif, 'Helvetica Neue', Arial"
         style="font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;"
       >
-        <WidgetBackground
-          class="background"
-          width="400"
-          height="120"
-          theme={theme}
-        />
-        <g class="main-content">
+        <WidgetBackground width="400" height="120" theme={theme} />
+        <g class=":uno: an-[fade-in]-ease-out-.4s">
           {/* Weather icon */}
           <use
             href={`#${getWeatherIcon(
@@ -218,20 +215,13 @@ export function WeatherWidget({
             </text>
           </g>
           {/* Temperature */}
-          <text>
-            <tspan
-              x="128"
-              y="12"
-              font-size="36"
-              text-anchor="end"
-              dominant-baseline="hanging"
-              fill={theme.text}
-            >
+          <text x="88" y="12">
+            <tspan font-size="36" dominant-baseline="hanging" fill={theme.text}>
               {temperature}
             </tspan>
             <tspan
-              x="132"
-              y="14"
+              dx="2"
+              dy="2"
               font-size="20"
               dominant-baseline="hanging"
               fill={theme.text}
@@ -243,7 +233,7 @@ export function WeatherWidget({
         </g>
         {/* Humidity, Precipitation, Wind and Air Pressure */}
         <g>
-          <g class="item-row item-row-1">
+          <g class=":uno: an-[fade-in]-ease-out-.4s-.2s">
             {/* Humidity */}
             <use
               href="#i-meteocons-humidity-fill"
@@ -267,7 +257,7 @@ export function WeatherWidget({
               </tspan>
             </text>
           </g>
-          <g class="item-row item-row-2">
+          <g class=":uno: an-[fade-in]-ease-out-.4s-.3s">
             {/* Precipitation */}
             <g>
               <use
@@ -330,7 +320,7 @@ export function WeatherWidget({
               </g>
             )}
           </g>
-          <g class="item-row item-row-3">
+          <g class=":uno: an-[fade-in]-ease-out-.4s-.3s">
             {/* Wind */}
             <g>
               <use
@@ -394,7 +384,7 @@ export function WeatherWidget({
           </g>
         </g>
         {/* Location */}
-        <g class="location">
+        <g class=":uno: an-[slide-in-left]-ease-out-.3s">
           <text
             x="392"
             y="8"
@@ -422,14 +412,14 @@ export function WeatherWidget({
         {/* Time */}
         <g>
           <rect
-            class="footer-background"
+            class=":uno: an-[reveal-to-right]-ease-out-.4s"
             y="94"
             width="400"
             height="100"
             fill="#ffffff"
             fill-opacity=".2"
           />
-          <g class="footer-content">
+          <g class=":uno: an-[slide-in-up]-ease-out-.4s-.1s">
             <text x="12" y="112" font-size="16" fill={theme.text}>
               <tspan>{formattedWeekday}</tspan>
             </text>
@@ -445,7 +435,7 @@ export function WeatherWidget({
           </g>
         </g>
         {/* Credit. No localization needed. */}
-        <g class="credit" lang="en-US">
+        <g class=":uno: an-[fade-in]-ease-out-.4s-1s" lang="en-US">
           <a
             href="https://github.com/SegaraRai/weather.svg"
             hrefLang="en-US"

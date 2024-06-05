@@ -4,6 +4,8 @@ import type { Plugin } from "vite";
 import meteocons from "@iconify-json/meteocons/icons.json" assert { type: "json" };
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 
+const ID = "iconSymbols.tsx";
+
 function parseCSSNumber(value: string): number | null {
   const match = /^(\d*\.\d+|\d+\.\d*|\d+)$/.exec(value)?.[1];
   if (!match) {
@@ -128,8 +130,6 @@ function enhanceIconAnimations(source: string): string {
 }
 
 export function iconSymbolsPlugin(mode: "development" | "production"): Plugin {
-  const ID = "iconSymbols.tsx";
-
   return {
     name: "icon-symbols",
     resolveId(source) {

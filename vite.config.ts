@@ -4,12 +4,17 @@ import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 import yaml from "@rollup/plugin-yaml";
 import { iconSymbolsPlugin } from "./iconSymbolsPlugin.js";
+import {
+  inlineUnoCSSPlugin,
+  dummyInlineUnoCSSPlugin,
+} from "./inlineUnoCSSPlugin.js";
 
 export default defineConfig(({ mode }) => {
   if (mode === "development") {
     return {
       plugins: [
         iconSymbolsPlugin("development"),
+        dummyInlineUnoCSSPlugin(),
         // yaml for importing translations
         yaml(),
         // preact and unocss are used only for development purposes
@@ -24,6 +29,8 @@ export default defineConfig(({ mode }) => {
   return {
     build: {
       minify: mode !== "preview",
+      // lightningcss can merge CSS rules with same media queries; esbuild does not seem to do that.
+      cssMinify: "lightningcss",
       rollupOptions: {
         input: "src/server/index.ts",
         output: {
@@ -35,7 +42,12 @@ export default defineConfig(({ mode }) => {
       },
       target: "esnext",
     },
-    plugins: [iconSymbolsPlugin("production"), yaml()],
+    plugins: [
+      iconSymbolsPlugin("production"),
+      inlineUnoCSSPlugin(),
+      yaml(),
+      unocss(),
+    ],
     esbuild: {
       jsx: "transform",
       jsxFactory: "h",
