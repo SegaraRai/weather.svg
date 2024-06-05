@@ -215,13 +215,18 @@ export function WeatherWidget({
             </text>
           </g>
           {/* Temperature */}
-          <text x="88" y="12">
-            <tspan font-size="36" dominant-baseline="hanging" fill={theme.text}>
+          <text x="88">
+            <tspan
+              y="12"
+              font-size="36"
+              dominant-baseline="hanging"
+              fill={theme.text}
+            >
               {temperature}
             </tspan>
             <tspan
               dx="2"
-              dy="2"
+              y="14"
               font-size="20"
               dominant-baseline="hanging"
               fill={theme.text}
