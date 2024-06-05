@@ -1,2 +1,2 @@
-export { render as pRender } from "./preactCompat";
-export { render } from "./render";
+export * from "./preactCompat";
+export * from "./render";
