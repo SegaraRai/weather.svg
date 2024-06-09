@@ -1,8 +1,17 @@
 import fsp from "node:fs/promises";
 import fg from "fast-glob";
+import { optimize } from "svgo";
 import type { Plugin } from "vite";
-import meteocons from "@iconify-json/meteocons/icons.json" assert { type: "json" };
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
+
+// use dynamic import to avoid TypeScript error regarding JSON import (import attributes vs. import assertions)
+// note that import attributes are erased by Vite (esbuild)
+const { default: meteocons } = await import(
+  "@iconify-json/meteocons/icons.json",
+  {
+    with: { type: "json" },
+  }
+);
 
 const ID = "iconSymbols.tsx";
 
@@ -129,6 +138,73 @@ function enhanceIconAnimations(source: string): string {
     .replace(/<\/svg>$/, "");
 }
 
+function optimizeSVG(source: string, idPrefix: string): string {
+  return optimize(source, {
+    multipass: true,
+    floatPrecision: 2,
+    plugins: [
+      {
+        name: "preset-default",
+        params: {
+          overrides: {
+            // this removes some parts used for animation
+            removeHiddenElems: false,
+          },
+        },
+      },
+      {
+        name: "prefixIds",
+        params: {
+          prefix: idPrefix,
+          delim: "",
+        },
+      },
+      {
+        name: "trimValueListWhitespace",
+        fn: () => {
+          return {
+            element: {
+              enter: (node) => {
+                const targetAttributes = {
+                  animate: ["values", "keyPoints", "keySplines", "keyTimes"],
+                  animateMotion: [
+                    "values",
+                    "keyPoints",
+                    "keySplines",
+                    "keyTimes",
+                  ],
+                  animateTransform: [
+                    "values",
+                    "keyPoints",
+                    "keySplines",
+                    "keyTimes",
+                  ],
+                }[node.name];
+                if (!targetAttributes) {
+                  return;
+                }
+
+                for (const attribute of targetAttributes) {
+                  const value = node.attributes[attribute];
+                  if (!value) {
+                    continue;
+                  }
+
+                  node.attributes[attribute] = value.replace(
+                    /([;,])\s+/g,
+                    "$1"
+                  );
+                }
+              },
+            },
+          };
+        },
+      },
+    ],
+  })
+    .data;
+}
+
 export function iconSymbolsPlugin(mode: "development" | "production"): Plugin {
   return {
     name: "icon-symbols",
@@ -165,10 +241,16 @@ export function iconSymbolsPlugin(mode: "development" | "production"): Plugin {
                     ""
                   ) as keyof (typeof meteocons)["icons"]
               )
-              .map((key) => [
-                `i-meteocons-${key}`,
-                `<symbol id="i-meteocons-${key}" viewBox="0 0 512 512">${enhanceIconAnimations(meteocons.icons[key].body)}</symbol>\n`,
-              ])
+              .map((key, i) => {
+                const content = optimizeSVG(
+                  enhanceIconAnimations(meteocons.icons[key].body),
+                  `i${i.toString(36).padStart(2, "0")}`
+                );
+                return [
+                  `i-meteocons-${key}`,
+                  `<symbol id="i-meteocons-${key}" viewBox="0 0 512 512">${content}</symbol>\n`,
+                ];
+              })
           );
 
           return `

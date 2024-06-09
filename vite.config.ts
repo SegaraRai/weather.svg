@@ -14,22 +14,22 @@ export default defineConfig(({ mode }) => {
     return {
       plugins: [
         iconSymbolsPlugin("development"),
+        // dummy plugin to provide `inline-uno.css?inline` content
         dummyInlineUnoCSSPlugin(),
         // yaml for importing translations
         yaml(),
-        // preact and unocss are used only for development purposes
-        // in production, unocss styles will NOT be shipped to improve browser compatibility
-        // preact will be replaced with something produces static HTML
-        preact(),
         unocss(),
+        // preact is only used for development purposes
+        // in production, preact will be replaced with custom JSX runtime (see ./src/server/jsx/jsx-runtime.ts)
+        preact(),
       ],
     };
   }
 
   return {
     build: {
-      minify: mode !== "preview",
-      // lightningcss can merge CSS rules with same media queries; esbuild does not seem to do that.
+      minify: "esbuild",
+      // esbuild doesn't seem to merge CSS rules with same media queries; lightningcss does.
       cssMinify: "lightningcss",
       rollupOptions: {
         input: "src/server/index.ts",
@@ -52,12 +52,12 @@ export default defineConfig(({ mode }) => {
       jsx: "transform",
       jsxFactory: "h",
       jsxFragment: "Fragment",
-      jsxImportSource: "server-jsx",
-      jsxInject: `import { h, Fragment } from "server-jsx/jsx-runtime";`,
+      jsxImportSource: "#server/jsx",
+      jsxInject: `import { h, Fragment } from "#server/jsx/jsx-runtime";`,
     },
     resolve: {
       alias: {
-        "server-jsx/jsx-runtime": fileURLToPath(
+        "#server/jsx/jsx-runtime": fileURLToPath(
           new URL("./src/server/jsx/jsx-runtime.ts", import.meta.url)
         ),
       },

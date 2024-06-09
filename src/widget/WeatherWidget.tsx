@@ -179,13 +179,15 @@ export function WeatherWidget({
         <clipPath id="widget-clip">
           <rect width="400" height="120" />
         </clipPath>
-        <style>{animationsCSS}</style>
-        {!import.meta.env.DEV && <style>{inlineUnoCSS}</style>}
+        <style>
+          {animationsCSS}
+          {inlineUnoCSS}
+        </style>
       </defs>
       <g
         clip-path="url(#widget-clip)"
         lang={language}
-        font-family="system-ui, sans-serif, 'Helvetica Neue', Arial"
+        font-family="system-ui,sans-serif,'Helvetica Neue',Arial"
         style="font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;"
       >
         <WidgetBackground width="400" height="120" theme={theme} />
