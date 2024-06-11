@@ -1,3 +1,4 @@
+import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 import { parseCSSDuration, parseCSSNumber, formatFloat } from "./utils";
 
 /**
