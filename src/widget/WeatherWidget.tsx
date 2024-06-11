@@ -161,7 +161,7 @@ export function WeatherWidget({
   ).toFixed(PRESSURE_FRACTION_DIGITS_MAP[prefAirPressure]);
 
   const translationLanguage = getTranslationLanguage(language);
-  const t = (key: string) =>
+  const t = (key: string): string =>
     getTranslation(translationLanguage, key) ??
     getTranslation(null, key) ??
     (import.meta.env.DEV ? key : "");
@@ -175,14 +175,38 @@ export function WeatherWidget({
     >
       <HTMLComment>{comments}</HTMLComment>
       <defs>
-        <IconSymbolsDefs />
-        <clipPath id="widget-clip">
-          <rect width="400" height="120" />
-        </clipPath>
         <style>
           {animationsCSS}
           {inlineUnoCSS}
         </style>
+        <IconSymbolsDefs />
+        <clipPath id="widget-clip">
+          <rect width="400" height="120" />
+        </clipPath>
+        <linearGradient id="mask-gradient" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#000" />
+          <stop offset=".05" stop-color="#fff" />
+          <stop offset=".95" stop-color="#fff" />
+          <stop offset="1" stop-color="#000" />
+        </linearGradient>
+        <mask id="description-mask">
+          <rect
+            x="80"
+            y="40"
+            width="112"
+            height="30"
+            fill="url(#mask-gradient)"
+          />
+        </mask>
+        <mask id="location-mask">
+          <rect
+            x="278"
+            y="0"
+            width="120"
+            height="60"
+            fill="url(#mask-gradient)"
+          />
+        </mask>
       </defs>
       <g
         clip-path="url(#widget-clip)"
@@ -203,7 +227,7 @@ export function WeatherWidget({
             height="80"
           />
           {/* Weather description */}
-          <g>
+          <g mask="url(#description-mask)">
             <text
               x="88"
               y="64"
@@ -244,7 +268,7 @@ export function WeatherWidget({
             {/* Humidity */}
             <use
               href="#i-meteocons-humidity-fill"
-              x="176"
+              x="192"
               y="10"
               width="28"
               height="28"
@@ -252,7 +276,7 @@ export function WeatherWidget({
               aria-label={t("label_humidity")}
             />
             <text
-              x="204"
+              x="220"
               y="24"
               font-size="12"
               dominant-baseline="middle"
@@ -269,7 +293,7 @@ export function WeatherWidget({
             <g>
               <use
                 href="#i-meteocons-raindrops-fill"
-                x="176"
+                x="192"
                 y="34"
                 width="28"
                 height="28"
@@ -277,7 +301,7 @@ export function WeatherWidget({
                 aria-label={t("label_precipitation_probability")}
               />
               <text
-                x="204"
+                x="220"
                 y="48"
                 font-size="12"
                 dominant-baseline="middle"
@@ -299,7 +323,7 @@ export function WeatherWidget({
               <g opacity="0">
                 <use
                   href="#i-meteocons-raindrop-measure-fill"
-                  x="176"
+                  x="192"
                   y="34"
                   width="28"
                   height="28"
@@ -307,7 +331,7 @@ export function WeatherWidget({
                   aria-label={t("label_precipitation")}
                 />
                 <text
-                  x="204"
+                  x="220"
                   y="48"
                   font-size="12"
                   dominant-baseline="middle"
@@ -332,7 +356,7 @@ export function WeatherWidget({
             <g>
               <use
                 href="#i-meteocons-windsock-fill"
-                x="176"
+                x="192"
                 y="58"
                 width="28"
                 height="28"
@@ -340,7 +364,7 @@ export function WeatherWidget({
                 aria-label={t("label_wind_speed")}
               />
               <text
-                x="204"
+                x="220"
                 y="72"
                 font-size="12"
                 dominant-baseline="middle"
@@ -362,7 +386,7 @@ export function WeatherWidget({
             <g opacity="0">
               <use
                 href="#i-meteocons-barometer-fill"
-                x="176"
+                x="192"
                 y="58"
                 width="28"
                 height="28"
@@ -370,7 +394,7 @@ export function WeatherWidget({
                 aria-label={t("label_sea_level_pressure")}
               />
               <text
-                x="204"
+                x="220"
                 y="72"
                 font-size="12"
                 dominant-baseline="middle"
@@ -391,7 +415,10 @@ export function WeatherWidget({
           </g>
         </g>
         {/* Location */}
-        <g class=":uno: an-[slide-in-left]-ease-out-.3s">
+        <g
+          class=":uno: an-[slide-in-left]-ease-out-.3s"
+          mask="url(#location-mask)"
+        >
           <text
             x="392"
             y="8"
