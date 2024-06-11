@@ -1,12 +1,12 @@
-// https://github.com/microsoft/TypeScript/pull/58176#issuecomment-2052698294
-export {} from "unocss/preset-mini";
-
 import {
   defineConfig,
   presetUno,
   toEscapedSelector as e,
   transformerCompileClass,
 } from "unocss";
+
+// https://github.com/microsoft/TypeScript/pull/58176#issuecomment-2052698294
+export {} from "unocss/preset-mini";
 
 export default defineConfig({
   presets: process.env.NODE_ENV === "development" ? [presetUno()] : [],

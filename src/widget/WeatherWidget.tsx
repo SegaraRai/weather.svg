@@ -174,8 +174,8 @@ export function WeatherWidget({
       xmlns="http://www.w3.org/2000/svg"
     >
       <HTMLComment>{comments}</HTMLComment>
-      <IconSymbolsDefs />
       <defs>
+        <IconSymbolsDefs />
         <clipPath id="widget-clip">
           <rect width="400" height="120" />
         </clipPath>

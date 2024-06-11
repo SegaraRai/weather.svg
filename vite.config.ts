@@ -3,11 +3,11 @@ import unocss from "unocss/vite";
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 import yaml from "@rollup/plugin-yaml";
-import { iconSymbolsPlugin } from "./iconSymbolsPlugin.js";
 import {
+  iconSymbolsPlugin,
   inlineUnoCSSPlugin,
   dummyInlineUnoCSSPlugin,
-} from "./inlineUnoCSSPlugin.js";
+} from "./vite-plugins";
 
 export default defineConfig(({ mode }) => {
   if (mode === "development") {
