@@ -1,4 +1,4 @@
-// https://api.open-meteo.com/v1/forecast?latitude=35.698683&longitude=139.774219&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,is_day&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_hours,precipitation_probability_max,sunrise,sunset&wind_speed_unit=ms&timezone=auto
+// https://api.open-meteo.com/v1/forecast?latitude=35.698683&longitude=139.774219&timezone=auto&timeformat=iso8601&temperature_unit=celsius&precipitation_unit=mm&wind_speed_unit=ms&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,is_day&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_hours,precipitation_probability_max,sunrise,sunset
 // generated with https://transform.tools/json-to-typescript
 
 export interface Weather {
@@ -74,7 +74,6 @@ export interface Hourly {
   time: string[];
   temperature_2m: number[];
   relative_humidity_2m: number[];
-  apparent_temperature: number[];
   precipitation_probability: number[];
   precipitation: number[];
   weather_code: number[];
