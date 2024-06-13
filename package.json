@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "wrangler dev --no-bundle",
+    "preview": "wrangler dev --no-bundle --env development",
     "preview-build": "vite build --mode preview",
     "test": "vitest",
     "storybook": "storybook dev -p 6006",

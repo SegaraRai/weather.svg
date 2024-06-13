@@ -6,12 +6,21 @@ compatibility_date = "2024-05-01"
 main = "dist/server.js"
 
 kv_namespaces = [
-  { binding = "KV_FETCH_CACHE", id = "f1973ac9cc0448599f91354ef38a4e3b" }
+  { binding = "KV_FETCH_CACHE", id = "f1973ac9cc0448599f91354ef38a4e3b" },
 ]
 
 [build]
-command = "pnpm preview-build"
+command = "pnpm build"
 watch_dir = "src"
 
 [dev]
 port = 5177
+
+[env.development]
+main = "dist/preview.server.js"
+kv_namespaces = [
+  { binding = "KV_FETCH_CACHE", id = "f1973ac9cc0448599f91354ef38a4e3b" },
+]
+
+[env.development.build]
+command = "pnpm preview-build"

@@ -36,7 +36,8 @@ export default defineConfig(({ mode }) => {
         output: {
           dir: "dist",
           format: "esm",
-          entryFileNames: () => "server.js",
+          entryFileNames: () =>
+            mode === "production" ? "server.js" : "preview.server.js",
         },
         preserveEntrySignatures: "strict",
       },
