@@ -1,3 +1,4 @@
+import { parse } from "bcp-47";
 import {
   custom,
   nullish,
@@ -13,7 +14,6 @@ import {
   SPEED_CONVERSION_MAP,
   TEMPERATURE_CONVERSION_MAP,
 } from "./conversion";
-import { parse } from "bcp-47";
 
 export function isValidLanguageTag(language: unknown): language is string {
   try {

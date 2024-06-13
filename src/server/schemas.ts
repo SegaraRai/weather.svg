@@ -1,11 +1,11 @@
 import {
   custom,
-  union,
-  object,
-  string,
   nullish,
-  type InferOutput,
+  object,
   pipe,
+  string,
+  union,
+  type InferOutput,
 } from "valibot";
 import { isValidLanguageTag } from "../widget/schemas";
 

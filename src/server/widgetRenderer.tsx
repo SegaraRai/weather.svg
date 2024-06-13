@@ -1,8 +1,8 @@
-import { pRender } from "./jsx";
-import { WeatherWidget } from "../widget";
-import type { Weather } from "../types/weather";
-import type { PreferencesSchema } from "../widget/schemas";
 import { injectIconSymbols } from "iconSymbols.tsx";
+import type { Weather } from "../types/weather";
+import { WeatherWidget } from "../widget";
+import type { PreferencesSchema } from "../widget/schemas";
+import { pRender } from "./jsx";
 
 export function renderWeatherWidget(
   weather: Weather,
