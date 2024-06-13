@@ -1,26 +1,22 @@
 import { Hono } from "hono";
-import { validator } from "hono/validator";
-import { FALLBACK_LANGUAGE } from "../widget/translations";
-import { isValidLanguageTag, preferencesSchema } from "../widget/schemas";
-import { safeParse, type InferOutput } from "valibot";
-import { locationParamSchema } from "./schemas";
-import type { Weather } from "../types/weather";
-import { renderWeatherWidget } from "./widgetRenderer";
-import { encryptLocation, parseLocation } from "./location";
-import type { Bindings } from "./bindings";
-import { derivePublicKey, importPrivateKey } from "./cryptoKey";
-import type { ReverseGeocoding } from "../types/reverseGeocoding";
-import { cachedFetch } from "./cachedFetch";
 import { HTTPException } from "hono/http-exception";
-
-const WEATHER_CACHE_TTL = 60;
-const REV_GEOCODING_CACHE_TTL = 24 * 60 * 60;
-
-const BASE_REQUEST_HEADERS = {
-  Accept: "application/json",
-  "Cache-Control": "no-cache, no-store, no-transform",
-  "User-Agent": "weather.svg/1.0",
-} as const;
+import { validator } from "hono/validator";
+import { safeParse, type InferOutput } from "valibot";
+import type { ReverseGeocoding } from "../types/reverseGeocoding";
+import type { Weather } from "../types/weather";
+import { isValidLanguageTag, preferencesSchema } from "../widget/schemas";
+import { FALLBACK_LANGUAGE } from "../widget/translations";
+import type { Bindings } from "./bindings";
+import { cachedFetch } from "./cachedFetch";
+import {
+  BASE_REQUEST_HEADERS,
+  REV_GEOCODING_CACHE_TTL,
+  WEATHER_CACHE_TTL,
+} from "./config";
+import { derivePublicKey, importPrivateKey } from "./cryptoKey";
+import { encryptLocation, parseLocation } from "./location";
+import { locationParamSchema } from "./schemas";
+import { renderWeatherWidget } from "./widgetRenderer";
 
 const app = new Hono<{ Bindings: Bindings }>({
   strict: true,
