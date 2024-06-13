@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/preact";
 
-import { WidgetBackground } from "./Background";
+import { WidgetBackgroundGradient } from "./BackgroundGradient";
 import { getTheme } from "./theme";
 
 const BG_COLOR = "#111";
@@ -39,8 +39,11 @@ function WidgetBackgroundWithText({
       viewBox="0 0 400 120"
       style={`background:${BG_COLOR};`}
     >
+      <defs>
+        <WidgetBackgroundGradient id="background-gradient" theme={theme} />
+      </defs>
       <g font-family="system-ui, sans-serif">
-        <WidgetBackground theme={theme} width="400" height="120" />
+        <rect width="400" height="120" fill="url(#background-gradient)" />
         <text x="12" y="40" font-size="28" fill={theme.text}>
           Example Text
         </text>

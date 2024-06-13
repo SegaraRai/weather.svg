@@ -1,7 +1,7 @@
 import { IconSymbolsDefs } from "iconSymbols.tsx";
 import inlineUnoCSS from "inline.uno.css?inline";
 import type { Weather } from "../types/weather";
-import { WidgetBackground } from "./Background";
+import { WidgetBackgroundGradient } from "./BackgroundGradient";
 import { HTMLComment } from "./HTMLComment";
 import animationsCSS from "./animations.css?inline";
 import comments from "./comments.txt?raw";
@@ -183,6 +183,7 @@ export function WeatherWidget({
         <clipPath id="widget-clip">
           <rect width="400" height="120" />
         </clipPath>
+        <WidgetBackgroundGradient id="background-gradient" theme={theme} />
         <linearGradient id="mask-gradient" x1="0" x2="1" y1="0" y2="0">
           <stop offset="0" stop-color="#000" />
           <stop offset=".05" stop-color="#fff" />
@@ -214,7 +215,7 @@ export function WeatherWidget({
         font-family="system-ui,sans-serif,'Helvetica Neue',Arial"
         style="font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;"
       >
-        <WidgetBackground width="400" height="120" theme={theme} />
+        <rect width="400" height="120" fill="url(#background-gradient)" />
         <g class=":uno: an-[fade-in]-ease-out-.4s">
           {/* Weather icon */}
           <use
