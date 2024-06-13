@@ -9,7 +9,8 @@ describe("location schema", () => {
         encrypted_location: "test",
         latitude: "40.0",
         longitude: "140.0",
-        location_name: "test_name",
+        location: "test_name",
+        location_lang: "en-US",
       })
     ).toEqual({
       encrypted_location: "test",
@@ -56,17 +57,39 @@ describe("location schema", () => {
     });
   });
 
-  it("should accept optional location_name", () => {
+  it("should accept optional location", () => {
     expect(
       parse(locationParamSchema, {
         latitude: "40.0",
         longitude: "140.0",
-        location_name: "test_name",
+        location: "test_name",
+        location_lang: "en-US",
       })
     ).toEqual({
       latitude: "40.0",
       longitude: "140.0",
-      location_name: "test_name",
+      location: "test_name",
+      location_lang: "en-US",
     });
+  });
+
+  it("should fail if location is provided but location_lang is not", () => {
+    expect(() =>
+      parse(locationParamSchema, {
+        latitude: "40.0",
+        longitude: "140.0",
+        location: "test_name",
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`[ValiError: Invalid type: Expected Object but received Object]`);
+  });
+
+  it("should fail if location_lang is provided but location is not", () => {
+    expect(() =>
+      parse(locationParamSchema, {
+        latitude: "40.0",
+        longitude: "140.0",
+        location_lang: "en-US",
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`[ValiError: Invalid type: Expected Object but received Object]`);
   });
 });
