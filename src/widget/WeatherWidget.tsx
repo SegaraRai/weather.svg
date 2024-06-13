@@ -200,9 +200,9 @@ export function WeatherWidget({
         </mask>
         <mask id="location-mask">
           <rect
-            x="278"
+            x="250"
             y="0"
-            width="120"
+            width="148"
             height="60"
             fill="url(#mask-gradient)"
           />
