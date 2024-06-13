@@ -6,14 +6,51 @@ import { safeParse, type InferOutput } from "valibot";
 import { locationParamSchema } from "./schemas";
 import type { Weather } from "../types/weather";
 import { renderWeatherWidget } from "./widgetRenderer";
+import { encryptLocation, parseLocation } from "./location";
+import type { Bindings } from "./bindings";
+import { derivePublicKey, importPrivateKey } from "./cryptoKey";
+import type { ReverseGeocoding } from "../types/reverseGeocoding";
+import { cachedFetch } from "./cachedFetch";
+import { HTTPException } from "hono/http-exception";
 
-const app = new Hono({
+const WEATHER_CACHE_TTL = 60;
+const REV_GEOCODING_CACHE_TTL = 24 * 60 * 60;
+
+const app = new Hono<{ Bindings: Bindings }>({
   strict: true,
+});
+
+app.onError((err, c) => {
+  if (import.meta.env.DEV) {
+    console.error(err);
+  }
+
+  if (err instanceof HTTPException) {
+    return c.json(
+      {
+        error: err.message,
+      },
+      err.status,
+      {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+      }
+    );
+  }
+
+  return c.json(
+    {
+      error: "Internal Server Error",
+    },
+    500,
+    {
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+    }
+  );
 });
 
 app.get(
   "/weather.svg",
-  validator("query", (data, c) => {
+  validator("query", ({ ...data }, c) => {
     if ((data?.lang ?? "auto") === "auto") {
       const detectedLanguage = c.req
         .header("Accept-Language")
@@ -42,7 +79,10 @@ app.get(
           error: "Invalid query parameters",
           issues,
         },
-        400
+        400,
+        {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+        }
       );
     }
 
@@ -54,13 +94,34 @@ app.get(
   async (c) => {
     const query = c.req.valid("query");
 
-    if ("encrypted_location" in query) {
-      return c.json(
-        {
-          error: "encrypted_location is not supported yet",
-        },
-        500
+    const privateKey = await importPrivateKey(c.env.JWK_RSA_PRIVATE_KEY);
+
+    const parsedLocation = await parseLocation(query, privateKey);
+    if (!parsedLocation) {
+      throw new HTTPException(400, {
+        message: "Invalid location",
+      });
+    }
+
+    const { location, encrypted } = parsedLocation;
+    if (!encrypted && c.req.query("encrypt") != null) {
+      const publicKey = await derivePublicKey(c.env.JWK_RSA_PRIVATE_KEY);
+
+      // redirect to the same URL with encrypted location
+      const url = new URL(c.req.url);
+      url.searchParams.delete("latitude");
+      url.searchParams.delete("longitude");
+      url.searchParams.delete("location");
+      url.searchParams.delete("location_lang");
+      url.searchParams.delete("encrypt");
+      url.searchParams.set(
+        "encrypted_location",
+        await encryptLocation(location, publicKey)
       );
+
+      // 302 Found is used to indicate that the resource is temporarily located at another URL
+      // the encrypted URL is not unique to the plain URL, so it's not a permanent redirect
+      return c.redirect(url.toString(), 302);
     }
 
     const forecastURL = new URL(
@@ -78,22 +139,50 @@ app.get(
       "daily",
       "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_hours,precipitation_probability_max,sunrise,sunset"
     );
-    forecastURL.searchParams.set("latitude", query.latitude);
-    forecastURL.searchParams.set("longitude", query.longitude);
+    forecastURL.searchParams.set("latitude", location.latitude);
+    forecastURL.searchParams.set("longitude", location.longitude);
 
-    const weatherRes = await fetch(forecastURL);
-    if (!weatherRes.ok) {
-      return c.json(
-        {
-          error: "Failed to fetch weather data",
-        },
-        500
+    const weatherData = (await cachedFetch(
+      forecastURL,
+      c.env.KV_FETCH_CACHE,
+      WEATHER_CACHE_TTL
+    ).catch(() =>
+      Promise.reject(
+        new HTTPException(500, {
+          message: "Failed to fetch weather data",
+        })
+      )
+    )) as Weather;
+
+    let { location: locationName, location_lang: locationLanguage } = location;
+    if (!locationName || !locationLanguage) {
+      const revGeocodingURL = new URL(
+        "https://api-bdc.net/data/reverse-geocode"
       );
+      revGeocodingURL.searchParams.set("latitude", location.latitude);
+      revGeocodingURL.searchParams.set("longitude", location.longitude);
+      revGeocodingURL.searchParams.set("localityLanguage", query.lang);
+      revGeocodingURL.searchParams.set("key", c.env.API_KEY_BIG_DATA_CLOUD);
+
+      const revGeocodingData = (await cachedFetch(
+        revGeocodingURL,
+        c.env.KV_FETCH_CACHE,
+        REV_GEOCODING_CACHE_TTL
+      ).catch(() =>
+        Promise.reject(
+          new HTTPException(500, {
+            message: "Failed to fetch location data",
+          })
+        )
+      )) as ReverseGeocoding;
+
+      locationName = revGeocodingData.locality;
+      locationLanguage = revGeocodingData.localityLanguageRequested;
     }
 
-    const weatherData = (await weatherRes.json()) as Weather;
     return c.text(
-      renderWeatherWidget(weatherData, query, "Somewhere", "en-US") + "\n",
+      renderWeatherWidget(weatherData, query, locationName, locationLanguage) +
+        "\n",
       200,
       {
         "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -102,5 +191,13 @@ app.get(
     );
   }
 );
+
+app.get("/public-key.json", async (c) => {
+  const publicKey = await derivePublicKey(c.env.JWK_RSA_PRIVATE_KEY);
+
+  return c.json(await crypto.subtle.exportKey("jwk", publicKey), 200, {
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+  });
+});
 
 export default app;
