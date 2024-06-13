@@ -1,11 +1,12 @@
 import { parse } from "valibot";
+import { decodeBase64URL, encodeBase64URL } from "./base64url";
+import { compressDeflateRaw, decompressDeflateRaw } from "./compression";
+import { decryptRSA, encryptRSA } from "./crypto";
 import {
   plainLocationSchema,
   type LocationParamSchema,
   type PlainLocationSchema,
 } from "./schemas";
-import { decryptRSA, encryptRSA } from "./crypto";
-import { decodeBase64URL, encodeBase64URL } from "./base64url";
 
 export interface LocationParseResult {
   location: PlainLocationSchema;
@@ -18,7 +19,9 @@ export async function decryptLocation(
 ): Promise<unknown> {
   return JSON.parse(
     new TextDecoder().decode(
-      await decryptRSA(decodeBase64URL(encryptedLocation), privateKey)
+      await decompressDeflateRaw(
+        await decryptRSA(decodeBase64URL(encryptedLocation), privateKey)
+      )
     )
   ) as unknown;
 }
@@ -29,7 +32,9 @@ export async function encryptLocation(
 ): Promise<string> {
   return encodeBase64URL(
     await encryptRSA(
-      new TextEncoder().encode(JSON.stringify(location)),
+      await compressDeflateRaw(
+        new TextEncoder().encode(JSON.stringify(location))
+      ),
       publicKey
     )
   );
