@@ -182,12 +182,12 @@ export const WEATHER_AFTERNOON_CLOUDY_PL_PL: Story = {
   },
 };
 
-export const WEATHER_EVENING_CLOUDY_EN_EN: Story = {
+export const WEATHER_EVENING_CLOUDY_DE_DE: Story = {
   args: {
-    weatherPreset: "WEATHER_EVENING_CLOUDY_ID",
-    locationLabel: "Delhi Cantonment",
-    locationLanguage: "en-US",
-    language: "en-US",
+    weatherPreset: "WEATHER_EVENING_CLOUDY_DE",
+    locationLabel: "Frankfurt am Main",
+    locationLanguage: "de-DE",
+    language: "de-DE",
     timeFormat: "auto",
     airPressure: "hpa",
     precipitation: "mm",

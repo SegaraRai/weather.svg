@@ -1,5 +1,7 @@
 import type { Preview } from "@storybook/preact";
 
+import "uno.css";
+
 const preview: Preview = {
   parameters: {
     controls: {
