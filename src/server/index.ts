@@ -16,6 +16,12 @@ import { HTTPException } from "hono/http-exception";
 const WEATHER_CACHE_TTL = 60;
 const REV_GEOCODING_CACHE_TTL = 24 * 60 * 60;
 
+const BASE_REQUEST_HEADERS = {
+  Accept: "application/json",
+  "Cache-Control": "no-cache, no-store, no-transform",
+  "User-Agent": "weather.svg/1.0",
+} as const;
+
 const app = new Hono<{ Bindings: Bindings }>({
   strict: true,
 });
@@ -92,6 +98,20 @@ app.get(
       InferOutput<typeof locationParamSchema>;
   }),
   async (c) => {
+    const fetcher = (url: URL | string): Promise<Response> =>
+      fetch(url, {
+        headers: BASE_REQUEST_HEADERS,
+      });
+    const proxiedFetcher = c.env.PROXY_URL
+      ? (url: URL | string): Promise<Response> =>
+          fetch(`${c.env.PROXY_URL}${encodeURIComponent(url.toString())}`, {
+            headers: {
+              ...BASE_REQUEST_HEADERS,
+              "Proxy-Authorization": c.env.PROXY_AUTHORIZATION,
+            },
+          })
+      : fetcher;
+
     const query = c.req.valid("query");
 
     const privateKey = await importPrivateKey(c.env.JWK_RSA_PRIVATE_KEY);
@@ -145,7 +165,8 @@ app.get(
     const weatherData = (await cachedFetch(
       forecastURL,
       c.env.KV_FETCH_CACHE,
-      WEATHER_CACHE_TTL
+      WEATHER_CACHE_TTL,
+      proxiedFetcher
     ).catch(() =>
       Promise.reject(
         new HTTPException(500, {
@@ -167,7 +188,8 @@ app.get(
       const revGeocodingData = (await cachedFetch(
         revGeocodingURL,
         c.env.KV_FETCH_CACHE,
-        REV_GEOCODING_CACHE_TTL
+        REV_GEOCODING_CACHE_TTL,
+        fetcher
       ).catch(() =>
         Promise.reject(
           new HTTPException(500, {
@@ -185,7 +207,7 @@ app.get(
         "\n",
       200,
       {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Cache-Control": "no-cache, no-store, no-transform, must-revalidate",
         "Content-Type": "image/svg+xml; charset=UTF-8",
       }
     );
@@ -196,7 +218,7 @@ app.get("/public-key.json", async (c) => {
   const publicKey = await derivePublicKey(c.env.JWK_RSA_PRIVATE_KEY);
 
   return c.json(await crypto.subtle.exportKey("jwk", publicKey), 200, {
-    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "Cache-Control": "no-cache, no-store, no-transform, must-revalidate",
   });
 });
 

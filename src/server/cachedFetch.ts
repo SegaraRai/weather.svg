@@ -4,7 +4,8 @@ import { encodeBase64URL } from "./base64url";
 export async function cachedFetch(
   url: string | URL,
   kv: KVNamespace,
-  ttl: number
+  ttl: number,
+  fetcher: (url: string | URL) => Promise<Response> = fetch
 ): Promise<unknown> {
   const urlHash = encodeBase64URL(
     await crypto.subtle.digest(
@@ -19,7 +20,7 @@ export async function cachedFetch(
     return kvResult;
   }
 
-  const response = await fetch(url);
+  const response = await fetcher(url);
   if (!response.ok) {
     throw response;
   }
