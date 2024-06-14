@@ -7,7 +7,7 @@ It is provided as a server that outputs an animated weather widget image in SVG 
 <img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=36.08297932646632&amp;longitude=140.11147093989302" alt="Weather in Tsukuba" style="width:100%" />
 
 **Connecticut, US**  
-<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.945053494801634&amp;longitude=-72.64589591337739&amp;lang=en-US&amp;time_format=12h" alt="Weather in Connecticut" style="width:100%" />
+<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.945053494801634&amp;longitude=-72.64589591337739&amp;lang=en-US&amp;time_format=12h&amp;precipitation=inch&amp;temperature=fahrenheit&amp;wind_speed=mph" alt="Weather in Connecticut" style="width:100%" />
 
 ## Usage
 
@@ -44,7 +44,7 @@ All of these parameters are optional.
 ### Examples
 
 - `https://weather-svg.abelia.workers.dev/weather.svg?latitude=36.08297932646632&longitude=140.11147093989302`
-- `https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.945053494801634&longitude=-72.64589591337739&lang=en-US&time_format=12h`
+- `https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.945053494801634&longitude=-72.64589591337739&lang=en-US&time_format=12h&precipitation=inch&temperature=fahrenheit&wind_speed=mph`
 
 ## Development
 
