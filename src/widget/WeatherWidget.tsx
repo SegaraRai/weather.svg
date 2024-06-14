@@ -17,6 +17,7 @@ import {
   TEMPERATURE_FRACTION_DIGITS_MAP,
 } from "./conversion";
 import { getWeatherIcon } from "./icons";
+import rootCSS from "./root.css?inline";
 import type { PreferencesSchema } from "./schemas";
 import { getTheme } from "./theme";
 import { getTranslation, getTranslationLanguage } from "./translations";
@@ -179,6 +180,7 @@ export function WeatherWidget({
       <defs>
         <style>
           {animationsCSS}
+          {rootCSS}
           {inlineUnoCSS}
         </style>
         <IconSymbolsDefs />

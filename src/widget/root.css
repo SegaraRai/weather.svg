@@ -1,0 +1,8 @@
+/* Root styles for adjusting the widget size when directly accessed by SVG images */
+
+:root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
