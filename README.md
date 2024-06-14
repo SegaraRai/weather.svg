@@ -3,7 +3,6 @@
 Weather.svg is a widget that displays weather information.
 It is provided as a server that outputs an animated weather widget image in SVG format.
 
-
 **Tsukuba, JP**  
 <img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=36.08297932646632&amp;longitude=140.11147093989302" alt="Weather in Tsukuba" style="width:100%" />
 
@@ -60,6 +59,9 @@ We recommend using [proto](https://moonrepo.dev/proto) to install tools.
 2. Run `pnpm wrangler secret put` to set the required secrets.  
    See `src/server/bindings.ts` for the required secrets.
 3. Run `pnpm wrangler deploy` to deploy your API server.
+
+Make sure to add `CLOUDFLARE_API_TOKEN` to GitHub Actions secrets to deploy automatically.  
+See [Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) for more information.
 
 ## Contribution
 

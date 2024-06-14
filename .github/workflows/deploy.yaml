@@ -22,10 +22,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           # `actions/setup-node` can be configured to not set up Node.js by omitting the `node-version` field
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm i
 
       - name: Deploy using wrangler
         run: pnpm wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
