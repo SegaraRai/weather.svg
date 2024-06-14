@@ -424,7 +424,7 @@ export function WeatherWidget({
         </g>
         {/* Location */}
         <g
-          class=":uno: an-[slide-in-left]-ease-out-1.3s"
+          class=":uno: an-[slide-in-left]-ease-out-.3s-1s"
           mask="url(#location-mask)"
         >
           <text
@@ -454,7 +454,7 @@ export function WeatherWidget({
         {/* Time */}
         <g>
           <rect
-            class=":uno: an-[reveal-to-right]-ease-out-1.4s"
+            class=":uno: an-[reveal-to-right]-ease-out-.4s-1s"
             y="94"
             width="400"
             height="100"
