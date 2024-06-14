@@ -217,8 +217,13 @@ export function WeatherWidget({
         font-family="system-ui,sans-serif,'Helvetica Neue',Arial"
         style="font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;"
       >
-        <rect width="400" height="120" fill="url(#background-gradient)" />
-        <g class=":uno: an-[fade-in]-ease-out-.4s">
+        <rect
+          class=":uno: an-[fade-in]-ease-out-.3s-.7s"
+          width="400"
+          height="120"
+          fill="url(#background-gradient)"
+        />
+        <g class=":uno: an-[fade-in]-ease-out-.4s-1s">
           {/* Weather icon */}
           <use
             href={`#${getWeatherIcon(
@@ -267,7 +272,7 @@ export function WeatherWidget({
         </g>
         {/* Humidity, Precipitation, Wind and Air Pressure */}
         <g>
-          <g class=":uno: an-[fade-in]-ease-out-.4s-.2s">
+          <g class=":uno: an-[fade-in]-ease-out-.4s-1.2s">
             {/* Humidity */}
             <use
               href="#i-meteocons-humidity-fill"
@@ -291,7 +296,7 @@ export function WeatherWidget({
               </tspan>
             </text>
           </g>
-          <g class=":uno: an-[fade-in]-ease-out-.4s-.3s">
+          <g class=":uno: an-[fade-in]-ease-out-.4s-1.3s">
             {/* Precipitation */}
             <g>
               <use
@@ -354,7 +359,7 @@ export function WeatherWidget({
               </g>
             )}
           </g>
-          <g class=":uno: an-[fade-in]-ease-out-.4s-.3s">
+          <g class=":uno: an-[fade-in]-ease-out-.4s-1.3s">
             {/* Wind */}
             <g>
               <use
@@ -419,7 +424,7 @@ export function WeatherWidget({
         </g>
         {/* Location */}
         <g
-          class=":uno: an-[slide-in-left]-ease-out-.3s"
+          class=":uno: an-[slide-in-left]-ease-out-1.3s"
           mask="url(#location-mask)"
         >
           <text
@@ -449,14 +454,14 @@ export function WeatherWidget({
         {/* Time */}
         <g>
           <rect
-            class=":uno: an-[reveal-to-right]-ease-out-.4s"
+            class=":uno: an-[reveal-to-right]-ease-out-1.4s"
             y="94"
             width="400"
             height="100"
             fill="#ffffff"
             fill-opacity=".2"
           />
-          <g class=":uno: an-[slide-in-up]-ease-out-.4s-.1s">
+          <g class=":uno: an-[slide-in-up]-ease-out-.4s-1.1s">
             <text x="12" y="112" font-size="16" fill={theme.text}>
               <tspan>{formattedWeekday}</tspan>
             </text>
@@ -472,7 +477,7 @@ export function WeatherWidget({
           </g>
         </g>
         {/* Credit. No localization needed. */}
-        <g class=":uno: an-[fade-in]-ease-out-.4s-1s" lang="en-US">
+        <g class=":uno: an-[fade-in]-ease-out-.4s-2s" lang="en-US">
           <a
             href="https://github.com/SegaraRai/weather.svg"
             hrefLang="en-US"
