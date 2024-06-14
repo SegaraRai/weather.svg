@@ -18,6 +18,8 @@ import { encryptLocation, parseLocation } from "./location";
 import { locationParamSchema } from "./schemas";
 import { renderWeatherWidget } from "./widgetRenderer";
 
+const NO_CACHE = "private, max-age=0, no-cache, no-store";
+
 const app = new Hono<{ Bindings: Bindings }>({
   strict: true,
 });
@@ -34,7 +36,7 @@ app.onError((err, c) => {
       },
       err.status,
       {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Cache-Control": NO_CACHE,
       }
     );
   }
@@ -45,7 +47,7 @@ app.onError((err, c) => {
     },
     500,
     {
-      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Cache-Control": NO_CACHE,
     }
   );
 });
@@ -83,7 +85,7 @@ app.get(
         },
         400,
         {
-          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Cache-Control": NO_CACHE,
         }
       );
     }
@@ -203,8 +205,9 @@ app.get(
         "\n",
       200,
       {
-        "Cache-Control": "no-cache, no-store, no-transform, must-revalidate",
+        "Cache-Control": NO_CACHE,
         "Content-Type": "image/svg+xml; charset=UTF-8",
+        Vary: "Accept-Language",
       }
     );
   }
@@ -214,7 +217,7 @@ app.get("/public-key.json", async (c) => {
   const publicKey = await derivePublicKey(c.env.JWK_RSA_PRIVATE_KEY);
 
   return c.json(await crypto.subtle.exportKey("jwk", publicKey), 200, {
-    "Cache-Control": "no-cache, no-store, no-transform, must-revalidate",
+    "Cache-Control": NO_CACHE,
   });
 });
 
