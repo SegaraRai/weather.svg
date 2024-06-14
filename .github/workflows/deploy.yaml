@@ -19,10 +19,10 @@ jobs:
           auto-install: true
 
       - name: Cache dependencies
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           # `actions/setup-node` can be configured to not set up Node.js by omitting the `node-version` field
-          cache: "pnpm"
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm i
