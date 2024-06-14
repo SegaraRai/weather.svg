@@ -4,6 +4,11 @@ import { validator } from "hono/validator";
 import { safeParse, type InferOutput } from "valibot";
 import type { ReverseGeocoding } from "../types/reverseGeocoding";
 import type { Weather } from "../types/weather";
+import {
+  CREDIT_BIG_DATA_CLOUD,
+  CREDIT_METEOCONS,
+  CREDIT_OPEN_METEO,
+} from "../widget/credits";
 import { isValidLanguageTag, preferencesSchema } from "../widget/schemas";
 import { FALLBACK_LANGUAGE } from "../widget/translations";
 import type { Bindings } from "./bindings";
@@ -142,6 +147,8 @@ app.get(
       return c.redirect(url.toString(), 302);
     }
 
+    let commentCredits = "";
+
     const forecastURL = new URL(
       "https://api.open-meteo.com/v1/forecast?timezone=auto&timeformat=iso8601&temperature_unit=celsius&precipitation_unit=mm&wind_speed_unit=ms"
     );
@@ -172,6 +179,7 @@ app.get(
         })
       )
     )) as Weather;
+    commentCredits += CREDIT_OPEN_METEO;
 
     let { location: locationName, location_lang: locationLanguage } = location;
     if (!locationName || !locationLanguage) {
@@ -195,14 +203,22 @@ app.get(
           })
         )
       )) as ReverseGeocoding;
+      commentCredits += CREDIT_BIG_DATA_CLOUD;
 
       locationName = revGeocodingData.locality;
       locationLanguage = revGeocodingData.localityLanguageRequested;
     }
 
+    commentCredits += CREDIT_METEOCONS;
+
     return c.text(
-      renderWeatherWidget(weatherData, query, locationName, locationLanguage) +
-        "\n",
+      renderWeatherWidget(
+        weatherData,
+        query,
+        locationName,
+        locationLanguage,
+        commentCredits
+      ) + "\n",
       200,
       {
         "Cache-Control": NO_CACHE,

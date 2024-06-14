@@ -8,7 +8,8 @@ export function renderWeatherWidget(
   weather: Weather,
   preferences: PreferencesSchema,
   locationLabel: string,
-  locationLanguage: string
+  locationLanguage: string,
+  commentCredits: string
 ): string {
   return injectIconSymbols(
     pRender(
@@ -17,6 +18,7 @@ export function renderWeatherWidget(
         preferences={preferences}
         locationLabel={locationLabel}
         locationLanguage={locationLanguage}
+        commentCredits={commentCredits}
       />
     )
   );

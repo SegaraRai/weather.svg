@@ -20,6 +20,7 @@ export function App() {
           temperature: "celsius",
           wind_speed: "mps",
         }}
+        commentCredits=""
       />
     </div>
   );

@@ -4,7 +4,7 @@ import type { Weather } from "../types/weather";
 import { WidgetBackgroundGradient } from "./BackgroundGradient";
 import { HTMLComment } from "./HTMLComment";
 import animationsCSS from "./animations.css?inline";
-import comments from "./comments.txt?raw";
+import commentBanner from "./bannerComment.txt?raw";
 import {
   LENGTH_CONVERSION_MAP,
   LENGTH_FRACTION_DIGITS_MAP,
@@ -110,11 +110,13 @@ export function WeatherWidget({
     temperature: prefTemperature,
     wind_speed: prefWindSpeed,
   },
+  commentCredits,
 }: {
   readonly weather: Weather;
   readonly locationLabel: string;
   readonly locationLanguage: string;
   readonly preferences: PreferencesSchema;
+  readonly commentCredits: string;
 }) {
   const datetime = weather.current.time;
   const timezone = weather.timezone;
@@ -173,7 +175,7 @@ export function WeatherWidget({
       viewBox="0 0 400 120"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <HTMLComment>{comments}</HTMLComment>
+      <HTMLComment>{commentBanner + commentCredits}</HTMLComment>
       <defs>
         <style>
           {animationsCSS}

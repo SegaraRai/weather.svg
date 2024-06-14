@@ -47,6 +47,7 @@ function WeatherWidgetWithPreset({
         temperature,
         wind_speed: windSpeed,
       }}
+      commentCredits=""
     />
   );
 }
