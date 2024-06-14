@@ -25,7 +25,7 @@ function isValidTagProp(value: unknown): boolean {
 
 function normalizeNewlines(value: string): string {
   // We don't support line endings other than LF and CRLF.
-  return value.replace(/[\r\u0085\u2028\u2029]/g, "\n");
+  return value.replaceAll("\r", "").replace(/[\r\u0085\u2028\u2029]/g, "\n");
 }
 
 function escapeHTML(value: string): string {
