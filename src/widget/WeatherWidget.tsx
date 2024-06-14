@@ -464,7 +464,7 @@ export function WeatherWidget({
             fill-opacity=".2"
           />
           <g class=":uno: an-[slide-in-up]-ease-out-.4s-1.1s">
-            <text x="12" y="112" font-size="16" fill={theme.text}>
+            <text x="8" y="112" font-size="16" fill={theme.text}>
               <tspan>{formattedWeekday}</tspan>
             </text>
             <text
