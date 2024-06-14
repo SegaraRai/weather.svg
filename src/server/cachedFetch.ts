@@ -4,7 +4,7 @@ import { encodeBase64URL } from "./base64url";
 export async function cachedFetch(
   url: string | URL,
   kv: KVNamespace,
-  ttl: number,
+  ttl: number | ((data: unknown) => number),
   fetcher: (url: string | URL) => Promise<Response> = fetch
 ): Promise<unknown> {
   const urlHash = encodeBase64URL(
@@ -26,8 +26,9 @@ export async function cachedFetch(
   }
 
   const networkResult = await response.json();
+  const ttlValue = typeof ttl === "function" ? ttl(networkResult) : ttl;
   await kv.put(cacheKey, JSON.stringify(networkResult), {
-    expirationTtl: ttl,
+    expirationTtl: ttlValue,
   });
 
   return networkResult;

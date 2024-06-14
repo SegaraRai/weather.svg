@@ -16,11 +16,13 @@ import { cachedFetch } from "./cachedFetch";
 import {
   BASE_REQUEST_HEADERS,
   REV_GEOCODING_CACHE_TTL,
-  WEATHER_CACHE_TTL,
+  WEATHER_CACHE_TTL_MAX,
+  WEATHER_CACHE_TTL_MIN,
 } from "./config";
 import { derivePublicKey, importPrivateKey } from "./cryptoKey";
 import { encryptLocation, parseLocation } from "./location";
 import { locationParamSchema } from "./schemas";
+import { clamp, getNextWeatherDataUpdateTimestamp } from "./utils";
 import { renderWeatherWidget } from "./widgetRenderer";
 
 const NO_CACHE = "private, max-age=0, no-cache, no-store";
@@ -170,7 +172,15 @@ app.get(
     const weatherData = (await cachedFetch(
       forecastURL,
       c.env.KV_FETCH_CACHE,
-      WEATHER_CACHE_TTL,
+      (data) =>
+        clamp(
+          Math.round(
+            (getNextWeatherDataUpdateTimestamp(data as Weather) - Date.now()) /
+              1000
+          ),
+          WEATHER_CACHE_TTL_MIN,
+          WEATHER_CACHE_TTL_MAX
+        ),
       proxiedFetcher
     ).catch(() =>
       Promise.reject(
