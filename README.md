@@ -3,7 +3,12 @@
 Weather.svg is a widget that displays weather information.
 It is provided as a server that outputs an animated weather widget image in SVG format.
 
-<!-- Example Image Here -->
+
+**Tsukuba, JP**  
+<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=36.08297932646632&amp;longitude=140.11147093989302" alt="Weather in Tsukuba" style="width:100%" />
+
+**Connecticut, US**  
+<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.945053494801634&amp;longitude=-72.64589591337739&amp;lang=en-US&amp;time_format=12h" alt="Weather in Connecticut" style="width:100%" />
 
 ## Usage
 
@@ -13,31 +18,60 @@ Specify the following query parameters at `https://.../weather.svg`
 
 - `latitude`: required, -90 to 90
 - `longitude`: required, -180 to 180
-- `location`: optional, string
+- `location`: optional, string  
   Displays this name without reverse geocoding if specified.
-- `location_lang`: optional, string
-  Specifies the language of the `location` (e.g., `en-US`).
+- `location_lang`: optional, string  
+  Specifies the language of the `location` (e.g., `en-US`).  
   Required if `location` is specified.
 
-These parameters can also be replaced with `encrypted_location`.
+These parameters can also be replaced with `encrypted_location`.  
+`encrypted_location` can be obtained by adding `&encrypt` to the end of the plain location URL.
 
 ### Preference Parameters
 
 All of these parameters are optional.
 
 - `air_pressure`: `hpa` (default) / `inhg`
-- `precipitation`: `mm` (default) / `in`
+- `precipitation`: `mm` (default) / `inch`
 - `temperature`: `celsius` (default) / `fahrenheit`
-- `wind_speed`: `mps` (default) / `kmph` / `mph` / `knot`
-- `time_format`: `auto` (default) / `12h` / `24h` / `24hn`
-- `lang`: `auto` (default) / BCP 47 tag, e.g., `en-US`
+- `wind_speed`: `mps` (default) / `kmph` / `mph` / `knot`  
+  Note that `mph` means miles per hour, while `mps` means meters per second.
+- `time_format`: `auto` (default) / `12h` / `24h` / `24hn`  
+  `24hn` means 24-hour notation with no leading zero.
+- `lang`: `auto` (default) / BCP 47 tag, e.g., `en-US`  
+  Specifies the language of the weather information, the datetime format, and the location name if `location` not provided.  
+  Detected automatically from `Accept-Language` header if `auto` is specified.
+
+## Development
+
+Before starting development, install Node.js and pnpm.  
+Required versions are specified in `package.json`.  
+We recommend using [proto](https://moonrepo.dev/proto) to install tools.
+
+1. Clone this repository.
+2. Run `pnpm install` to install dependencies.
+3. Run `pnpm dev` to start the development Vite server.
+4. Create `.dev.vars` based on `.dev.vars.example` and fill in the values.
+5. Run `pnpm preview` to preview the API server.
+
+## Deployment
+
+1. Edit `wrangler.toml` to match your Cloudflare account and Workers KV namespace id.
+2. Run `pnpm wrangler secret put` to set the required secrets.  
+   See `src/server/bindings.ts` for the required secrets.
+3. Run `pnpm wrangler deploy` to deploy your API server.
 
 ## Contribution
 
-TODO
+Open an issue for any bug or feature request.  
+Pull requests are also welcome.
+
+## License
+
+This project is licensed under the MIT License.
 
 ## Credits
 
-- Weather data by Open-Meteo
-- Reverse geocoding by BigDataCloud
-- Icon by Meteocons
+- Weather data by [Open-Meteo](https://open-meteo.com/), CC BY 4.0.
+- Locality data by [BigDataCloud](https://www.bigdatacloud.com/).
+- Icons from [Meteocons by Bas Milius](https://bas.dev/work/meteocons), MIT License.
