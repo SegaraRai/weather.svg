@@ -11,7 +11,7 @@ It is provided as a server that outputs an animated weather widget image in SVG 
 
 ## Usage
 
-Specify the following query parameters at `https://.../weather.svg`
+Add the following query parameters to the URL of the API server: `https://weather-svg.abelia.workers.dev/weather.svg`.
 
 ### Location Parameters
 
@@ -40,6 +40,11 @@ All of these parameters are optional.
 - `lang`: `auto` (default) / BCP 47 tag, e.g., `en-US`  
   Specifies the language of the weather information, the datetime format, and the location name if `location` not provided.  
   Detected automatically from `Accept-Language` header if `auto` is specified.
+
+### Examples
+
+- `https://weather-svg.abelia.workers.dev/weather.svg?latitude=36.08297932646632&longitude=140.11147093989302`
+- `https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.945053494801634&longitude=-72.64589591337739&lang=en-US&time_format=12h`
 
 ## Development
 
