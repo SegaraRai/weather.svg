@@ -1,14 +1,14 @@
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 import { parseCSSDuration, parseCSSNumber, formatFloat } from "./utils";
 
+const ANIMATION_WAIT_SECS = 4;
+
 /**
  * Adjusts the animations of the meteocons icon SVG.
  * @param source the SVG source of meteocons, without the `<svg>` tag
  * @returns the fixed SVG source
  */
 export function repeatSVGAnimations(source: string): string {
-  const ANIMATION_WAIT_SECS = 4;
-
   const parsed = new DOMParser().parseFromString(
     `<svg>${source}</svg>`,
     "image/svg+xml"

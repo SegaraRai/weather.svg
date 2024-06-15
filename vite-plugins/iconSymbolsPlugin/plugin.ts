@@ -1,9 +1,10 @@
-import fsp from "node:fs/promises";
 import fg from "fast-glob";
+import fsp from "node:fs/promises";
 import type { Plugin } from "vite";
-import { repeatSVGAnimations } from "./repeatSVGAnimations";
-import { optimizeSVG } from "./optimizeSVG";
 import { OPTIMIZE_FLOAT_PRECISION, RESOLVE_ID } from "./config";
+import { expandClippedViewBox } from "./expandClippedViewBox";
+import { optimizeSVG } from "./optimizeSVG";
+import { repeatSVGAnimations } from "./repeatSVGAnimations";
 
 // use dynamic import to avoid TypeScript error regarding JSON import (import attributes vs. import assertions)
 // note that import attributes are erased by Vite (esbuild)
@@ -52,7 +53,9 @@ export function iconSymbolsPlugin(mode: "development" | "production"): Plugin {
               )
               .map((key, i) => {
                 const content = optimizeSVG(
-                  repeatSVGAnimations(meteocons.icons[key].body),
+                  expandClippedViewBox(
+                    repeatSVGAnimations(meteocons.icons[key].body)
+                  ),
                   `i${i.toString(36).padStart(2, "0")}`,
                   OPTIMIZE_FLOAT_PRECISION
                 );
@@ -81,7 +84,7 @@ export function injectIconSymbols(source: string): string {
           const allIcons = Object.entries(meteocons.icons)
             .map(([key, icon]) => {
               const content = optimizeSVG(
-                repeatSVGAnimations(icon.body),
+                expandClippedViewBox(repeatSVGAnimations(icon.body)),
                 `i-${key}--`,
                 OPTIMIZE_FLOAT_PRECISION
               );
