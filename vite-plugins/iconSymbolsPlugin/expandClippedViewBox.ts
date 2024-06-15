@@ -1,7 +1,8 @@
 import { DOMParser, XMLSerializer } from "@xmldom/xmldom";
 
 /**
- * Adjusts the animations of the meteocons icon SVG.
+ * Adjusts the viewBox of the meteocons icon SVG. \
+ * Some animated icons such as `i-meteocons-overcast-fill` are clipped, so we need to expand the viewBox to show the full icon.
  * @param source the SVG source of meteocons, without the `<svg>` tag
  * @returns the fixed SVG source
  */
