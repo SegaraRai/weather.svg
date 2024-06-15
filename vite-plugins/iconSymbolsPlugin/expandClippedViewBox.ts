@@ -11,7 +11,7 @@ export function expandClippedViewBox(source: string): string {
     "image/svg+xml"
   );
 
-  l: for (const symbol of Array.from(parsed.getElementsByTagName("symbol"))) {
+  for (const symbol of Array.from(parsed.getElementsByTagName("symbol"))) {
     const symbolId = symbol.getAttribute("id");
     if (!symbolId) {
       console.warn("<symbol /> without id attribute");
