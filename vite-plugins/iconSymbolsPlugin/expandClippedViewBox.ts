@@ -37,33 +37,6 @@ export function expandClippedViewBox(source: string): string {
     }
 
     const [vbX, vbY, vbWidth, vbHeight] = viewBox;
-    for (const use of uses) {
-      const width = use.getAttribute("width")?.trim();
-      const height = use.getAttribute("height")?.trim();
-
-      if (!width || !height) {
-        console.warn(
-          "Missing width or height in <use /> of <symbol />",
-          symbolId
-        );
-        continue l;
-      }
-
-      const diffWidth = Math.abs(parseFloat(width) - vbWidth);
-      const diffHeight = Math.abs(parseFloat(height) - vbHeight);
-      if (diffWidth >= 1 || diffHeight >= 1) {
-        console.warn(
-          "Mismatched width or height in <use /> of <symbol />",
-          symbolId,
-          width,
-          height,
-          "vs",
-          vbWidth,
-          vbHeight
-        );
-        continue l;
-      }
-    }
 
     let expandX = 0;
     let expandY = 0;
@@ -105,6 +78,18 @@ export function expandClippedViewBox(source: string): string {
       expandY = Math.max(expandY, Math.abs(minY), Math.abs(maxY));
     }
 
+    if (!isFinite(expandX) || !isFinite(expandY)) {
+      console.warn(
+        "Invalid expandX",
+        expandX,
+        "or expandY",
+        expandY,
+        " generated in <symbol />",
+        symbolId
+      );
+      continue;
+    }
+
     if (expandX === 0 && expandY === 0) {
       continue;
     }
@@ -116,16 +101,53 @@ export function expandClippedViewBox(source: string): string {
 
     symbol.setAttribute("viewBox", newViewBox);
     for (const use of uses) {
-      if (expandX) {
-        use.setAttribute("x", String(-expandX));
+      const x = parseFloat(use.getAttribute("x") || "0");
+      const y = parseFloat(use.getAttribute("y") || "0");
+      const width = parseFloat(use.getAttribute("width") || "0");
+      const height = parseFloat(use.getAttribute("height") || "0");
+      if (
+        !isFinite(x) ||
+        !isFinite(y) ||
+        !isFinite(width) ||
+        !isFinite(height) ||
+        width === 0 ||
+        height === 0
+      ) {
+        console.warn(
+          "Invalid x",
+          x,
+          "y",
+          y,
+          "width",
+          width,
+          "height",
+          height,
+          "in <use /> of <symbol />",
+          symbolId
+        );
+        continue;
       }
 
-      if (expandY) {
-        use.setAttribute("y", String(-expandY));
+      let scale = Math.min(width / vbWidth, height / vbHeight);
+      if (scale !== 1) {
+        console.log("Rare scale", scale, "in <use /> of <symbol />", symbolId);
       }
 
-      use.setAttribute("width", String(vbWidth + expandX * 2));
-      use.setAttribute("height", String(vbHeight + expandY * 2));
+      const newX = x - expandX * scale;
+      const newY = y - expandY * scale;
+      const newWidth = (vbWidth + expandX * 2) * scale;
+      const newHeight = (vbHeight + expandY * 2) * scale;
+
+      if (newX !== 0) {
+        use.setAttribute("x", String(newX));
+      }
+
+      if (newY !== 0) {
+        use.setAttribute("y", String(newY));
+      }
+
+      use.setAttribute("width", String(newWidth));
+      use.setAttribute("height", String(newHeight));
     }
 
     /*

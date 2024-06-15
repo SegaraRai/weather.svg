@@ -31,10 +31,10 @@ function OpacityAnimation({
   partDuration,
   switchDuration,
 }: {
-  index: number;
-  total: number;
-  partDuration: number;
-  switchDuration: number;
+  readonly index: number;
+  readonly total: number;
+  readonly partDuration: number;
+  readonly switchDuration: number;
 }) {
   if (total <= 1) {
     return <></>;
