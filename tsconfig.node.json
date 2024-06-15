@@ -17,12 +17,6 @@
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true
   },
-  "include": [
-    "."
-  ],
-  "exclude": [
-    "src",
-    "dist",
-    "node_modules"
-  ]
+  "include": ["."],
+  "exclude": ["src", "dist", "node_modules"]
 }

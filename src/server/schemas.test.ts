@@ -80,7 +80,9 @@ describe("location schema", () => {
         longitude: "140.0",
         location: "test_name",
       })
-    ).toThrowErrorMatchingInlineSnapshot(`[ValiError: Invalid type: Expected Object but received Object]`);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[ValiError: Invalid type: Expected Object but received Object]`
+    );
   });
 
   it("should fail if location_lang is provided but location is not", () => {
@@ -90,6 +92,8 @@ describe("location schema", () => {
         longitude: "140.0",
         location_lang: "en-US",
       })
-    ).toThrowErrorMatchingInlineSnapshot(`[ValiError: Invalid type: Expected Object but received Object]`);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[ValiError: Invalid type: Expected Object but received Object]`
+    );
   });
 });

@@ -6,6 +6,8 @@ export function compressDeflateRaw(data: BufferSource): Promise<ArrayBuffer> {
 
 export function decompressDeflateRaw(data: BufferSource): Promise<ArrayBuffer> {
   return new Response(
-    new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))
+    new Blob([data])
+      .stream()
+      .pipeThrough(new DecompressionStream("deflate-raw"))
   ).arrayBuffer();
 }
