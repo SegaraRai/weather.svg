@@ -97,9 +97,13 @@ export function expandClippedViewBox(source: string): string {
     expandX = Math.ceil(expandX + 10);
     expandY = Math.ceil(expandY + 10);
 
-    const newViewBox = `${vbX - expandX} ${vbY - expandY} ${vbWidth + expandX * 2} ${vbHeight + expandY * 2}`;
-
+    const newVBX = vbX - expandX;
+    const newVBY = vbY - expandY;
+    const newVBWidth = vbWidth + expandX * 2;
+    const newVBHeight = vbHeight + expandY * 2;
+    const newViewBox = `${newVBX} ${newVBY} ${newVBWidth} ${newVBHeight}`;
     symbol.setAttribute("viewBox", newViewBox);
+
     for (const use of uses) {
       const x = parseFloat(use.getAttribute("x") || "0");
       const y = parseFloat(use.getAttribute("y") || "0");
@@ -128,15 +132,33 @@ export function expandClippedViewBox(source: string): string {
         continue;
       }
 
-      let scale = Math.min(width / vbWidth, height / vbHeight);
-      if (scale !== 1) {
-        console.log("Rare scale", scale, "in <use /> of <symbol />", symbolId);
+      const scaleX = width / vbWidth;
+      const scaleY = height / vbHeight;
+      if (Math.abs(scaleX - scaleY) > 0.01) {
+        console.warn(
+          "Non-uniform scale",
+          scaleX,
+          scaleY,
+          "in <use /> of <symbol />",
+          symbolId
+        );
+        continue;
       }
 
-      const newX = x - expandX * scale;
-      const newY = y - expandY * scale;
-      const newWidth = (vbWidth + expandX * 2) * scale;
-      const newHeight = (vbHeight + expandY * 2) * scale;
+      const effectiveScale = Math.min(scaleX, scaleY);
+      if (effectiveScale !== 1) {
+        console.info(
+          "Rare scale",
+          effectiveScale,
+          "in <use /> of <symbol />",
+          symbolId
+        );
+      }
+
+      const newX = x - expandX * effectiveScale;
+      const newY = y - expandY * effectiveScale;
+      const newWidth = newVBWidth * effectiveScale;
+      const newHeight = newVBHeight * effectiveScale;
 
       if (newX !== 0) {
         use.setAttribute("x", String(newX));
