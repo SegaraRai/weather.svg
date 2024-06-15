@@ -55,8 +55,6 @@ function WeatherWidgetWithPreset({
 }) {
   const weather = PRESETS[weatherPreset] as Weather;
 
-  console.log("weatherIcon", weatherIcon);
-
   useLayoutEffect(() => {
     if (!weatherIcon || weatherIcon === "auto") {
       return;
@@ -65,7 +63,6 @@ function WeatherWidgetWithPreset({
     const weatherIconUse = document.querySelector(
       'use[width="80"]'
     ) as SVGUseElement | null;
-    console.log("weatherIconUse", weatherIconUse);
 
     if (!weatherIconUse) {
       return;
