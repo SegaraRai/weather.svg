@@ -54,8 +54,14 @@ export const plainLocationSchema = pipe(
     if (typeof param !== "object") {
       return false;
     }
-    const hasLocation = (param as any).location != null;
-    const hasLocationLang = (param as any).location_lang != null;
+
+    interface LocationParam {
+      location?: string | null;
+      location_lang?: string | null;
+    }
+
+    const hasLocation = (param as LocationParam).location != null;
+    const hasLocationLang = (param as LocationParam).location_lang != null;
     return hasLocation === hasLocationLang;
   }, "location and location_lang must be both present or both absent")
 );

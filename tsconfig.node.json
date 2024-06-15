@@ -4,6 +4,8 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "target": "ES2022",
+    "checkJs": true,
+    "emitDeclarationOnly": true,
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -20,6 +22,7 @@
   ],
   "exclude": [
     "src",
+    "dist",
     "node_modules"
   ]
 }

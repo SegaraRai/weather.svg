@@ -1,7 +1,6 @@
 import type { Weather } from "../types/weather";
 import { WeatherWidget } from "../widget";
 import * as _forecast from "./example/forecast.json";
-import * as _geocoding from "./example/reverse-geocode-client.json";
 
 const forecast = _forecast as Weather;
 

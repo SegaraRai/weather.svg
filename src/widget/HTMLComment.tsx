@@ -1,4 +1,5 @@
 declare module "preact" {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
       htmlComment: {
