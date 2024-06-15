@@ -58,7 +58,10 @@ export const preferencesSchema = object({
     ),
     "mps"
   ),
-  time_format: nullish(picklist(["auto", "12h", "24h", "24hn"]), "auto"),
+  time_format: nullish(
+    picklist(["auto", "12h", "24h", "24hn", "native"]),
+    "auto"
+  ),
   lang: pipe(
     string("lang must be a string"),
     custom(isValidLanguageTag, "invalid lang string specified")

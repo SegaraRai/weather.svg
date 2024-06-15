@@ -35,8 +35,9 @@ All of these parameters are optional.
 - `temperature`: `celsius` (default) / `fahrenheit`
 - `wind_speed`: `mps` (default) / `kmph` / `mph` / `knot`  
   Note that `mph` means miles per hour, while `mps` means meters per second.
-- `time_format`: `auto` (default) / `12h` / `24h` / `24hn`  
-  `24hn` means 24-hour notation with no leading zero.
+- `time_format`: `auto` (default) / `12h` / `24h` / `24hn` / `native`  
+  `24hn` means 24-hour notation with no leading zero.  
+  `native` means the native datetime format (including year) of the language.
 - `lang`: `auto` (default) / BCP 47 tag, e.g., `en-US`  
   Specifies the language of the weather information, the datetime format, and the location name if `location` not provided.  
   Detected automatically from `Accept-Language` header if `auto` is specified.

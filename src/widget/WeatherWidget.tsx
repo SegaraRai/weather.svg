@@ -73,11 +73,45 @@ function OpacityAnimation({
   );
 }
 
+function detectTimeFormat(language: string): "12h" | "24h" | "24hn" | null {
+  const strDate1 = new Date("2024-01-03T17:07:09Z").toLocaleTimeString(
+    language,
+    {
+      timeZone: "UTC",
+      timeStyle: "short",
+    }
+  );
+
+  const has5 = strDate1.includes("5");
+  const has17 = strDate1.includes("17");
+  if (has5 === has17) {
+    return null;
+  }
+
+  if (has5) {
+    return "12h";
+  }
+
+  const strDate2 = new Date("2024-01-03T05:07:09Z").toLocaleTimeString(
+    language,
+    {
+      timeZone: "UTC",
+      timeStyle: "short",
+    }
+  );
+  return strDate2.includes("05") ? "24h" : "24hn";
+}
+
 function formatDateTime(
   datetime: string,
   language: string,
   prefTimeFormat: PreferencesSchema["time_format"]
 ): [weekday: string, dateTime: string] {
+  const timeFormat =
+    prefTimeFormat === "auto"
+      ? detectTimeFormat(language) ?? "native"
+      : prefTimeFormat;
+
   const date = new Date(datetime + "Z");
   return [
     date.toLocaleString(language, {
@@ -86,13 +120,13 @@ function formatDateTime(
     }),
     date.toLocaleString(language, {
       timeZone: "UTC",
-      ...(prefTimeFormat === "auto"
+      ...(timeFormat === "native"
         ? { dateStyle: "medium", timeStyle: "short" }
         : {
             month: "short",
             day: "numeric",
-            hour: prefTimeFormat === "24h" ? "2-digit" : "numeric",
-            hour12: prefTimeFormat === "12h",
+            hour: timeFormat === "24h" ? "2-digit" : "numeric",
+            hour12: timeFormat === "12h",
             minute: "2-digit",
           }),
     }),
