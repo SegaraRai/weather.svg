@@ -305,7 +305,7 @@ export function WeatherWidget({
             {/* Precipitation */}
             <g>
               <use
-                href="#i-meteocons-raindrops-fill"
+                href="#i-meteocons-umbrella-fill"
                 x="192"
                 y="34"
                 width="28"
