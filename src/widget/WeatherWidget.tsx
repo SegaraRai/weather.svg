@@ -1,9 +1,9 @@
 import { IconSymbolsDefs } from "iconSymbols.tsx";
 import inlineUnoCSS from "inline.uno.css?inline";
-import type { JSX as PreactJSX } from "preact";
 import type { Weather } from "../types/weather";
 import { WidgetBackgroundGradient } from "./BackgroundGradient";
 import { HTMLComment } from "./HTMLComment";
+import { OpacityAnimation } from "./OpacityAnimation";
 import animationsCSS from "./animations.css?inline";
 import commentBanner from "./bannerComment.txt?raw";
 import {
@@ -17,125 +17,17 @@ import {
   TEMPERATURE_CONVERSION_MAP,
   TEMPERATURE_FRACTION_DIGITS_MAP,
 } from "./conversion";
+import { formatDateTime } from "./format";
 import { getWeatherIcon } from "./icons";
 import { resolvePreferences } from "./resolvePreferences";
 import rootCSS from "./root.css?inline";
+import { createLogicalComponent, isRTLLanguage } from "./rtl";
 import type { PreferencesSchema } from "./schemas";
 import { getTheme } from "./theme";
 import { getTranslation, getTranslationLanguage } from "./translations";
 
 const ANIMATION_PART_DURATION = 8;
 const ANIMATION_SWITCH_DURATION = 0.4;
-
-function OpacityAnimation({
-  index,
-  total,
-  partDuration,
-  switchDuration,
-}: {
-  readonly index: number;
-  readonly total: number;
-  readonly partDuration: number;
-  readonly switchDuration: number;
-}) {
-  if (total <= 1) {
-    return <></>;
-  }
-
-  const totalDuration = total * partDuration;
-  const showSwitchStart = index * partDuration;
-  const showSwitchFinish = showSwitchStart + switchDuration;
-  const hideSwitchStart = showSwitchStart + partDuration - switchDuration;
-  const hideSwitchFinish = showSwitchStart + partDuration;
-  const keyTimes = [
-    0,
-    showSwitchStart / totalDuration,
-    showSwitchFinish / totalDuration,
-    hideSwitchStart / totalDuration,
-    hideSwitchFinish / totalDuration,
-    1,
-  ];
-  const values = [0, 0, 1, 1, 0, 0];
-  if (index === 0) {
-    values.shift();
-    keyTimes.shift();
-  } else if (index === total - 1) {
-    values.pop();
-    keyTimes.pop();
-  }
-
-  return (
-    <animate
-      attributeName="opacity"
-      values={values.join(";")}
-      keyTimes={keyTimes.join(";")}
-      dur={`${totalDuration}s`}
-      repeatCount="indefinite"
-    />
-  );
-}
-
-function createLogicalComponent<T extends "rect" | "text" | "use">(
-  tagName: T,
-  boxWidth: number,
-  flip: boolean
-) {
-  const Tag = tagName;
-  if (!flip) {
-    return (props: PreactJSX.SVGAttributes<SVGElementTagNameMap[T]>) => (
-      // @ts-expect-error
-      <Tag {...props} />
-    );
-  }
-
-  return ({ ...props }) => {
-    const x = boxWidth - Number(props.x ?? "0") - Number(props.width ?? "0");
-    const textAnchor =
-      tagName === "text" ? props["text-anchor"] ?? "start" : undefined;
-    const flippedTextAnchor =
-      textAnchor === "start"
-        ? "end"
-        : textAnchor === "end"
-          ? "start"
-          : textAnchor;
-
-    // @ts-expect-error
-    return <Tag {...props} x={x} text-anchor={flippedTextAnchor} />;
-  };
-}
-
-function formatDateTime(
-  datetime: string,
-  language: string,
-  timeFormat: Exclude<PreferencesSchema["time_format"], "auto">
-): [weekday: string, dateTime: string] {
-  const date = new Date(datetime + "Z");
-  return [
-    date.toLocaleString(language, {
-      timeZone: "UTC",
-      weekday: "long",
-    }),
-    date.toLocaleString(language, {
-      timeZone: "UTC",
-      ...(timeFormat === "native"
-        ? { dateStyle: "medium", timeStyle: "short" }
-        : {
-            month: "short",
-            day: "numeric",
-            hour: timeFormat === "24h" ? "2-digit" : "numeric",
-            hour12: timeFormat === "12h",
-            minute: "2-digit",
-          }),
-    }),
-  ];
-}
-
-function isRTLLanguage(language: string): boolean {
-  const locale = new Intl.Locale(language);
-  // @ts-expect-error
-  const textInfo = locale.getTextInfo?.() ?? locale.textInfo;
-  return textInfo?.direction === "rtl";
-}
 
 export function WeatherWidget({
   weather,
