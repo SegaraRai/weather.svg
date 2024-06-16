@@ -2,11 +2,12 @@ import type { ComponentProps } from "preact";
 import type { Theme } from "./theme";
 
 export function WidgetBackgroundGradient({
+  id,
   theme,
   ...props
 }: { readonly theme: Theme } & ComponentProps<"linearGradient">) {
   return (
-    <linearGradient x1="0" x2="2" y1="0" y2="3" {...props}>
+    <linearGradient id={id} x1="0" x2="2" y1="0" y2="3" {...props}>
       <animate
         attributeName="x2"
         values="2;2.5;2"
