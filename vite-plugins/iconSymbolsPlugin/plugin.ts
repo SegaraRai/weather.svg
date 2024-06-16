@@ -74,8 +74,8 @@ export function IconSymbolsDefs() {
 }
 
 export function injectIconSymbols(source: string): string {
-  const usedIcons = Array.from(new Set(source.match(/i-meteocons-[a-z0-9-]+/g) ?? [])).sort();
-  const replacement = usedIcons.map(icon => ICON_MAP[icon]).join("\\n");
+  const usedIcons = Array.from(new Set(source.match(/(?<=href="#)i-meteocons-[a-z0-9-]+(?=")/g) ?? [])).sort();
+  const replacement = usedIcons.map((icon) => ICON_MAP[icon]).join("\\n");
   return source.replace("<!--__ICON_SYMBOLS_PLACEHOLDER__-->", replacement);
 }
 `;
