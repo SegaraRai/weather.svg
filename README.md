@@ -3,11 +3,14 @@
 Weather.svg is a widget that displays weather information.
 It is provided as a server that outputs an animated weather widget image in SVG format.
 
-**Tsukuba, JP**  
-<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=36.08297932646632&amp;longitude=140.11147093989302" alt="Weather in Tsukuba" style="width:100%" />
+**Leeds, UK** (shown in your preferred language and units)  
+<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=53.86681894798549&amp;longitude=-1.6584345829082057" alt="Weather in Leeds" style="width:100%" />
 
-**Connecticut, US**  
-<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.945053494801634&amp;longitude=-72.64589591337739&amp;lang=en-US&amp;time_format=12h&amp;precipitation=inch&amp;temperature=fahrenheit&amp;wind_speed=mph" alt="Weather in Connecticut" style="width:100%" />
+**Greenwich, US** (shown in English, regular time, Fahrenheit and imperial units)  
+<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=41.021247610322455&amp;longitude=-73.62548875414416&amp;lang=en-US&amp;time_format=12h&amp;air_pressure=hpa&amp;precipitation=inch&amp;temperature=fahrenheit&amp;wind_speed=mph" alt="Weather in Connecticut" style="width:100%" />
+
+**Tsukuba, JP** (shown in Japanese, military time, Celsius and metric units)  
+<img src="https://weather-svg.abelia.workers.dev/weather.svg?latitude=36.08297932646632&amp;longitude=140.11147093989302&amp;lang=ja-JP&amp;time_format=24hn&amp;air_pressure=hpa&amp;precipitation=mm&amp;temperature=celsius&amp;wind_speed=mps" alt="Weather in Tsukuba" style="width:100%" />
 
 ## Usage
 
@@ -30,10 +33,10 @@ These parameters can also be replaced with `encrypted_location`.
 
 All of these parameters are optional.
 
-- `air_pressure`: `hpa` (default) / `inhg`
-- `precipitation`: `mm` (default) / `inch`
-- `temperature`: `celsius` (default) / `fahrenheit`
-- `wind_speed`: `mps` (default) / `kmph` / `mph` / `knot`  
+- `air_pressure`: `auto` (default) / `hpa` / `inhg`
+- `precipitation`: `auto` (default) / `mm` / `inch`
+- `temperature`: `auto` (default) / `celsius` / `fahrenheit`
+- `wind_speed`: `auto` (default) / `mps` / `kmph` / `mph` / `knot`  
   Note that `mph` means miles per hour, while `mps` means meters per second.
 - `time_format`: `auto` (default) / `12h` / `24h` / `24hn` / `native`  
   `24hn` means 24-hour notation with no leading zero.  
