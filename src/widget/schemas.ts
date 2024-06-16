@@ -29,34 +29,32 @@ export function isValidLanguageTag(language: unknown): language is string {
 
 export const preferencesSchema = object({
   air_pressure: nullish(
-    picklist(
-      Object.keys(
-        PRESSURE_CONVERSION_MAP
-      ) as (keyof typeof PRESSURE_CONVERSION_MAP)[]
-    ),
-    "hpa"
+    picklist(["auto", ...Object.keys(PRESSURE_CONVERSION_MAP)] as (
+      | "auto"
+      | keyof typeof PRESSURE_CONVERSION_MAP
+    )[]),
+    "auto"
   ),
   precipitation: nullish(
-    picklist(
-      Object.keys(
-        LENGTH_CONVERSION_MAP
-      ) as (keyof typeof LENGTH_CONVERSION_MAP)[]
-    ),
-    "mm"
+    picklist(["auto", ...Object.keys(LENGTH_CONVERSION_MAP)] as (
+      | "auto"
+      | keyof typeof LENGTH_CONVERSION_MAP
+    )[]),
+    "auto"
   ),
   temperature: nullish(
-    picklist(
-      Object.keys(
-        TEMPERATURE_CONVERSION_MAP
-      ) as (keyof typeof TEMPERATURE_CONVERSION_MAP)[]
-    ),
-    "celsius"
+    picklist(["auto", ...Object.keys(TEMPERATURE_CONVERSION_MAP)] as (
+      | "auto"
+      | keyof typeof TEMPERATURE_CONVERSION_MAP
+    )[]),
+    "auto"
   ),
   wind_speed: nullish(
-    picklist(
-      Object.keys(SPEED_CONVERSION_MAP) as (keyof typeof SPEED_CONVERSION_MAP)[]
-    ),
-    "mps"
+    picklist(["auto", ...Object.keys(SPEED_CONVERSION_MAP)] as (
+      | "auto"
+      | keyof typeof SPEED_CONVERSION_MAP
+    )[]),
+    "auto"
   ),
   time_format: nullish(
     picklist(["auto", "12h", "24h", "24hn", "native"]),

@@ -17,6 +17,7 @@ import {
   TEMPERATURE_FRACTION_DIGITS_MAP,
 } from "./conversion";
 import { getWeatherIcon } from "./icons";
+import { resolvePreferences } from "./resolvePreferences";
 import rootCSS from "./root.css?inline";
 import type { PreferencesSchema } from "./schemas";
 import { getTheme } from "./theme";
@@ -73,45 +74,11 @@ function OpacityAnimation({
   );
 }
 
-function detectTimeFormat(language: string): "12h" | "24h" | "24hn" | null {
-  const strDate1 = new Date("2024-01-03T17:07:09Z").toLocaleTimeString(
-    language,
-    {
-      timeZone: "UTC",
-      timeStyle: "short",
-    }
-  );
-
-  const has5 = strDate1.includes("5");
-  const has17 = strDate1.includes("17");
-  if (has5 === has17) {
-    return null;
-  }
-
-  if (has5) {
-    return "12h";
-  }
-
-  const strDate2 = new Date("2024-01-03T05:07:09Z").toLocaleTimeString(
-    language,
-    {
-      timeZone: "UTC",
-      timeStyle: "short",
-    }
-  );
-  return strDate2.includes("05") ? "24h" : "24hn";
-}
-
 function formatDateTime(
   datetime: string,
   language: string,
-  prefTimeFormat: PreferencesSchema["time_format"]
+  timeFormat: Exclude<PreferencesSchema["time_format"], "auto">
 ): [weekday: string, dateTime: string] {
-  const timeFormat =
-    prefTimeFormat === "auto"
-      ? detectTimeFormat(language) ?? "native"
-      : prefTimeFormat;
-
   const date = new Date(datetime + "Z");
   return [
     date.toLocaleString(language, {
@@ -137,14 +104,7 @@ export function WeatherWidget({
   weather,
   locationLabel,
   locationLanguage,
-  preferences: {
-    lang: language,
-    time_format: prefTimeFormat,
-    air_pressure: prefAirPressure,
-    precipitation: prefPrecipitation,
-    temperature: prefTemperature,
-    wind_speed: prefWindSpeed,
-  },
+  preferences,
   commentCredits,
 }: {
   readonly weather: Weather;
@@ -153,6 +113,15 @@ export function WeatherWidget({
   readonly preferences: PreferencesSchema;
   readonly commentCredits: string;
 }) {
+  const { lang: language } = preferences;
+  const {
+    airPressure: prefAirPressure,
+    precipitation: prefPrecipitation,
+    temperature: prefTemperature,
+    windSpeed: prefWindSpeed,
+    timeFormat: prefTimeFormat,
+  } = resolvePreferences(preferences);
+
   const datetime = weather.current.time;
   const timezone = weather.timezone;
 
