@@ -1,5 +1,6 @@
 import { IconSymbolsDefs } from "iconSymbols.tsx";
 import inlineUnoCSS from "inline.uno.css?inline";
+import type { JSX as PreactJSX } from "preact";
 import type { Weather } from "../types/weather";
 import { WidgetBackgroundGradient } from "./BackgroundGradient";
 import { HTMLComment } from "./HTMLComment";
@@ -74,6 +75,35 @@ function OpacityAnimation({
   );
 }
 
+function createLogicalComponent<T extends "rect" | "text" | "use">(
+  tagName: T,
+  boxWidth: number,
+  flip: boolean
+) {
+  const Tag = tagName;
+  if (!flip) {
+    return (props: PreactJSX.SVGAttributes<SVGElementTagNameMap[T]>) => (
+      // @ts-expect-error
+      <Tag {...props} />
+    );
+  }
+
+  return ({ ...props }) => {
+    const x = boxWidth - Number(props.x ?? "0") - Number(props.width ?? "0");
+    const textAnchor =
+      tagName === "text" ? props["text-anchor"] ?? "start" : undefined;
+    const flippedTextAnchor =
+      textAnchor === "start"
+        ? "end"
+        : textAnchor === "end"
+          ? "start"
+          : textAnchor;
+
+    // @ts-expect-error
+    return <Tag {...props} x={x} text-anchor={flippedTextAnchor} />;
+  };
+}
+
 function formatDateTime(
   datetime: string,
   language: string,
@@ -98,6 +128,13 @@ function formatDateTime(
           }),
     }),
   ];
+}
+
+function isRTLLanguage(language: string): boolean {
+  const locale = new Intl.Locale(language);
+  // @ts-expect-error
+  const textInfo = locale.getTextInfo?.() ?? locale.textInfo;
+  return textInfo?.direction === "rtl";
 }
 
 export function WeatherWidget({
@@ -172,6 +209,12 @@ export function WeatherWidget({
     getTranslation(null, key) ??
     (import.meta.env.DEV ? key : "");
 
+  const isRTL = isRTLLanguage(language);
+  const BOX_SIZE = 400;
+  const LRect = createLogicalComponent("rect", BOX_SIZE, isRTL);
+  const LText = createLogicalComponent("text", BOX_SIZE, isRTL);
+  const LUse = createLogicalComponent("use", BOX_SIZE, isRTL);
+
   return (
     <svg
       width="800"
@@ -198,7 +241,7 @@ export function WeatherWidget({
           <stop offset="1" stop-color="#000" />
         </linearGradient>
         <mask id="description-mask">
-          <rect
+          <LRect
             x="80"
             y="40"
             width="112"
@@ -207,7 +250,7 @@ export function WeatherWidget({
           />
         </mask>
         <mask id="location-mask">
-          <rect
+          <LRect
             x="250"
             y="0"
             width="148"
@@ -230,7 +273,7 @@ export function WeatherWidget({
         />
         <g class=":uno: an-[fade-in]-ease-out-.4s-1s">
           {/* Weather icon */}
-          <use
+          <LUse
             href={`#${getWeatherIcon(
               weather.current.weather_code,
               weather.current.is_day
@@ -241,7 +284,7 @@ export function WeatherWidget({
           />
           {/* Weather description */}
           <g mask="url(#description-mask)">
-            <text
+            <LText
               x="88"
               y="64"
               font-size="12"
@@ -251,11 +294,12 @@ export function WeatherWidget({
               <tspan>
                 {t(`wmo_${weather.current.weather_code}`) ?? t("wmo_unknown")}
               </tspan>
-            </text>
+            </LText>
           </g>
           {/* Temperature */}
-          <text x="88">
+          <LText x="88">
             <tspan
+              {...(isRTL ? { x: "290", "text-anchor": "end" } : {})}
               y="12"
               font-size="36"
               dominant-baseline="hanging"
@@ -264,7 +308,7 @@ export function WeatherWidget({
               {temperature}
             </tspan>
             <tspan
-              dx="2"
+              {...(isRTL ? { x: "312", "text-anchor": "end" } : { dx: "2" })}
               y="14"
               font-size="20"
               dominant-baseline="hanging"
@@ -273,13 +317,13 @@ export function WeatherWidget({
             >
               {t(`unit_${prefTemperature}`)}
             </tspan>
-          </text>
+          </LText>
         </g>
         {/* Humidity, Precipitation, Wind and Air Pressure */}
         <g>
           <g class=":uno: an-[fade-in]-ease-out-.4s-1.2s">
             {/* Humidity */}
-            <use
+            <LUse
               href="#i-meteocons-humidity-fill"
               x="192"
               y="10"
@@ -288,7 +332,7 @@ export function WeatherWidget({
               role="img"
               aria-label={t("label_humidity")}
             />
-            <text
+            <LText
               x="220"
               y="24"
               font-size="12"
@@ -299,12 +343,12 @@ export function WeatherWidget({
                 {humidity}
                 {t("unit_percent")}
               </tspan>
-            </text>
+            </LText>
           </g>
           <g class=":uno: an-[fade-in]-ease-out-.4s-1.3s">
             {/* Precipitation */}
             <g>
-              <use
+              <LUse
                 href="#i-meteocons-umbrella-fill"
                 x="192"
                 y="34"
@@ -313,7 +357,7 @@ export function WeatherWidget({
                 role="img"
                 aria-label={t("label_precipitation_probability")}
               />
-              <text
+              <LText
                 x="220"
                 y="48"
                 font-size="12"
@@ -324,7 +368,7 @@ export function WeatherWidget({
                   {precipitationProbability}
                   {t("unit_percent")}
                 </tspan>
-              </text>
+              </LText>
               <OpacityAnimation
                 index={0}
                 total={showPrecipitation ? 2 : 1}
@@ -334,7 +378,7 @@ export function WeatherWidget({
             </g>
             {showPrecipitation && (
               <g opacity="0">
-                <use
+                <LUse
                   href="#i-meteocons-raindrop-measure-fill"
                   x="192"
                   y="34"
@@ -343,7 +387,7 @@ export function WeatherWidget({
                   role="img"
                   aria-label={t("label_precipitation")}
                 />
-                <text
+                <LText
                   x="220"
                   y="48"
                   font-size="12"
@@ -354,7 +398,7 @@ export function WeatherWidget({
                     {precipitation}
                     {t(`unit_${prefPrecipitation}`)}
                   </tspan>
-                </text>
+                </LText>
                 <OpacityAnimation
                   index={1}
                   total={2}
@@ -367,7 +411,7 @@ export function WeatherWidget({
           <g class=":uno: an-[fade-in]-ease-out-.4s-1.3s">
             {/* Wind */}
             <g>
-              <use
+              <LUse
                 href="#i-meteocons-windsock-fill"
                 x="192"
                 y="58"
@@ -376,7 +420,7 @@ export function WeatherWidget({
                 role="img"
                 aria-label={t("label_wind_speed")}
               />
-              <text
+              <LText
                 x="220"
                 y="72"
                 font-size="12"
@@ -387,7 +431,7 @@ export function WeatherWidget({
                   {windSpeed}
                   {t(`unit_${prefWindSpeed}`)}
                 </tspan>
-              </text>
+              </LText>
               <OpacityAnimation
                 index={0}
                 total={2}
@@ -397,7 +441,7 @@ export function WeatherWidget({
             </g>
             {/* Sea Level Pressure */}
             <g opacity="0">
-              <use
+              <LUse
                 href="#i-meteocons-barometer-fill"
                 x="192"
                 y="58"
@@ -406,7 +450,7 @@ export function WeatherWidget({
                 role="img"
                 aria-label={t("label_sea_level_pressure")}
               />
-              <text
+              <LText
                 x="220"
                 y="72"
                 font-size="12"
@@ -417,7 +461,7 @@ export function WeatherWidget({
                   {seaLevelAirPressure}
                   {t(`unit_${prefAirPressure}`)}
                 </tspan>
-              </text>
+              </LText>
               <OpacityAnimation
                 index={1}
                 total={2}
@@ -429,10 +473,14 @@ export function WeatherWidget({
         </g>
         {/* Location */}
         <g
-          class=":uno: an-[slide-in-left]-ease-out-.3s-1s"
+          class={
+            isRTL
+              ? ":uno: an-[slide-in-left-rtl]-ease-out-.3s-1s"
+              : ":uno: an-[slide-in-left]-ease-out-.3s-1s"
+          }
           mask="url(#location-mask)"
         >
-          <text
+          <LText
             x="392"
             y="8"
             font-size="16"
@@ -442,8 +490,8 @@ export function WeatherWidget({
             lang={locationLanguage}
           >
             <tspan>{locationLabel}</tspan>
-          </text>
-          <text
+          </LText>
+          <LText
             x="392"
             y="28"
             font-size="12"
@@ -454,12 +502,16 @@ export function WeatherWidget({
             lang="en-US"
           >
             <tspan>{timezone}</tspan>
-          </text>
+          </LText>
         </g>
         {/* Time */}
         <g>
           <rect
-            class=":uno: an-[reveal-to-right]-ease-out-.4s-1s"
+            class={
+              isRTL
+                ? ":uno: an-[reveal-to-right-rtl]-ease-out-.4s-1s"
+                : ":uno: an-[reveal-to-right]-ease-out-.4s-1s"
+            }
             y="94"
             width="400"
             height="100"
@@ -467,10 +519,10 @@ export function WeatherWidget({
             fill-opacity=".2"
           />
           <g class=":uno: an-[slide-in-up]-ease-out-.4s-1.1s">
-            <text x="8" y="112" font-size="16" fill={theme.text}>
+            <LText x="8" y="112" font-size="16" fill={theme.text}>
               <tspan>{formattedWeekday}</tspan>
-            </text>
-            <text
+            </LText>
+            <LText
               x="392"
               y="112"
               font-size="12"
@@ -478,7 +530,7 @@ export function WeatherWidget({
               fill={theme.text}
             >
               <tspan>{formattedDateTime}</tspan>
-            </text>
+            </LText>
           </g>
         </g>
         {/* Credit. No localization needed. */}
@@ -490,7 +542,7 @@ export function WeatherWidget({
             referrerpolicy="no-referrer"
             target="_blank"
           >
-            <text
+            <LText
               x="392"
               y="76"
               text-anchor="end"
@@ -499,7 +551,7 @@ export function WeatherWidget({
               fill={theme.text}
             >
               <tspan>Weather.svg</tspan>
-            </text>
+            </LText>
           </a>
           <a
             href="https://open-meteo.com/"
@@ -508,7 +560,7 @@ export function WeatherWidget({
             referrerpolicy="no-referrer"
             target="_blank"
           >
-            <text
+            <LText
               x="392"
               y="86"
               text-anchor="end"
@@ -517,7 +569,7 @@ export function WeatherWidget({
               fill={theme.text}
             >
               <tspan>data by Open-Meteo</tspan>
-            </text>
+            </LText>
           </a>
         </g>
       </g>

@@ -64,7 +64,7 @@ function escapeHTMLComment(value: string): string {
     .replaceAll("--", "&#45;&#45;");
 }
 
-function renderProps(props: Readonly<Record<string, PropValue>>): string {
+function renderAttributes(props: Readonly<Record<string, PropValue>>): string {
   return Object.entries(props)
     .filter(
       ([key, value]) =>
@@ -141,7 +141,9 @@ function isNoNewlineTag(tag: string): boolean {
 export function render(node: Node, noNewlines = false): string {
   switch (node[SYMBOL_NODE_TYPE]) {
     case NODE_TYPE_SUBSTANTIAL: {
-      const { t: tag, p: props, c: children } = node;
+      const { t: tag, p: props } = node;
+      const children = node.p.children ? [node.p.children].flat() : node.c;
+
       if (typeof tag === "string") {
         if (!isValidTagProp(tag)) {
           if (import.meta.env.DEV) {
@@ -155,7 +157,7 @@ export function render(node: Node, noNewlines = false): string {
           return `<!--${escapeHTMLComment(String(props.content))}-->`;
         }
 
-        const preamble = `<${tag}${renderProps(props)}`;
+        const preamble = `<${tag}${renderAttributes(props)}`;
 
         return children.some((child) => child != null && child !== "")
           ? `${preamble}>${renderChildren(children, noNewlines || isNoNewlineTag(tag))}</${tag}>`

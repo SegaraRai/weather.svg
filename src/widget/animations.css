@@ -16,6 +16,15 @@
   }
 }
 
+@keyframes slide-in-left-rtl {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 @keyframes slide-in-up {
   from {
     transform: translateY(85%);
@@ -28,6 +37,15 @@
 @keyframes reveal-to-right {
   from {
     clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+@keyframes reveal-to-right-rtl {
+  from {
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
   }
   to {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
