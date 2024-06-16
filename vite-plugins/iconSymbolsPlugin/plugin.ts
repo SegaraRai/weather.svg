@@ -29,11 +29,19 @@ export function iconSymbolsPlugin(mode: "development" | "production"): Plugin {
         if (mode === "production") {
           // On production, we first extract all used icons on build time and write them to a map for later (runtime) injection.
           // The component is only for placeholder and will be replaced by the injected icons on post-processing.
-          const files = await fg("src/**/*.{ts,tsx}");
+          const files = await fg("src/**/*.{ts,tsx}", {
+            ignore: [
+              "**/*.d.ts",
+              "**/*.stories.*",
+              "**/*.test.*",
+              "**/*.spec.*",
+            ],
+          });
           const usedIconSet = new Set<string>();
           for (const file of files) {
             const content = await fsp.readFile(file, "utf-8");
-            const matches = content.match(/i-meteocons-[a-z0-9-]+/g) ?? [];
+            const matches =
+              content.match(/(?<=["'`]#?)i-meteocons-[a-z0-9-]+/g) ?? [];
             for (const match of matches) {
               usedIconSet.add(match);
               usedIconSet.add(match.replace(/-day\b/, "-night"));
