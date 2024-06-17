@@ -16,6 +16,5 @@
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["."],
   "exclude": ["node_modules", "dist", "src", ".storybook"]
 }
