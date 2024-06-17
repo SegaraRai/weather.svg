@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc -b && vite build",
     "preview": "wrangler dev --no-bundle --env development",
     "preview-build": "vite build --mode preview",
     "lint": "eslint . && prettier -c .",

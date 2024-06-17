@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
     "target": "ES2022",
     "checkJs": true,
-    "emitDeclarationOnly": true,
+    "noEmit": true,
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -18,5 +17,5 @@
     "verbatimModuleSyntax": true
   },
   "include": ["."],
-  "exclude": ["src", "dist", "node_modules"]
+  "exclude": ["node_modules", "dist", "src", ".storybook"]
 }
