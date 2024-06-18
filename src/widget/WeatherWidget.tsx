@@ -74,7 +74,7 @@ export function WeatherWidget({
   );
 
   // prevent showing 0 mm or 0.0 inch precipitation
-  const showPrecipitation = weather.current.precipitation >= 5;
+  const showPrecipitation = weather.hourly.precipitation[hourlyIndex] >= 3;
 
   const temperature = TEMPERATURE_CONVERSION_MAP[prefTemperature](
     weather.current.temperature_2m
@@ -86,7 +86,7 @@ export function WeatherWidget({
     hourlyIndex
   ].toFixed(PERCENTAGE_FRACTION_DIGITS);
   const precipitation = LENGTH_CONVERSION_MAP[prefPrecipitation](
-    weather.current.precipitation
+    weather.hourly.precipitation[hourlyIndex]
   ).toFixed(LENGTH_FRACTION_DIGITS_MAP[prefPrecipitation]);
   const windSpeed = SPEED_CONVERSION_MAP[prefWindSpeed](
     weather.current.wind_speed_10m
